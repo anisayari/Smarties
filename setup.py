@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(name='Smarties',
 
-      version='0.3',
+      version='0.1.1',
 
       url='https://github.com/anisayari/Smarties',
 
