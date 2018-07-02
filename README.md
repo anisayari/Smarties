@@ -21,9 +21,11 @@ pip install Smarties
 
 ### Example
 ```
+wiki_dico_path = "wiki_dico.json"
+
 if __name__ == '__main__':
-    sm.ConstructDatabaseFromKnwoledgebase(wiki_dico_path)
-    df = sm.ImportDatabase()
+    sm.ConstructDatabaseFromKnwoledgebase(wiki_dico_path,database_file_ouput="database_file_custom_name.csv")
+    df = sm.ImportDatabase(database_file = "database_file_custom_name.csv")
 
     classifier,model,df = sm.ModelFromDatabase(df)
 
