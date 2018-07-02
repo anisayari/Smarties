@@ -1,1 +1,1 @@
-from .TextClassifier import *
+from .TextClassifierAPI import *
