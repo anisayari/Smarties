@@ -1,2 +1,4 @@
 .idea/*
 .eggs/*
+dist/*
+Smarties.egg-info/*
