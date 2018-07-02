@@ -42,7 +42,7 @@ Please feel free to contribute ! Report any bugs in the issue section.
 - [x] Text processing (Clean, tokenizing,...)
 - [ ] Wikipedia auto-search by class
 - [x] Database creation from a json (Wikipedia learning, Datastructure, sampling..)
-- [x] Create text classification algorithm (GridSearch, RFC, Doc2Vec)
+- [x] Create text classification algorithm (RAKE, GridSearch, RFC, Doc2Vec)
 - [x] Input example and return classification
 
 ### LICENSE
