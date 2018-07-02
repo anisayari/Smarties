@@ -12,7 +12,7 @@ setup(name='Smarties',
 
       author_email='anis.ayari.pro@gmail.com',
 
-      description='Manage configuration files',
+      description='A Smart AI Text Classifier',
 
       packages=find_packages(exclude=['tests']),
 
