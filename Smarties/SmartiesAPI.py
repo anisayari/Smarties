@@ -16,8 +16,6 @@ from . import rake
 
 stoppath = "Stoplist.txt"
 mapping_file = 'mapping.json'
-database_file ="content_database.csv"
-
 
 def TexttoKeywordDataframe(text,class_le):
     #print('Keyword Extraction by NLTK, In Progress...')
@@ -65,7 +63,7 @@ def default(o):
     if isinstance(o, np.int64): return int(o)
     raise TypeError
 
-def ConstructDatabaseFromKnwoledgebase(wiki_dico_path):
+def ConstructDatabaseFromKnwoledgebase(wiki_dico_path,database_file_ouput):
     df_database = pd.DataFrame(columns=["Content", "Class", "SubClass"])
     json_file = open(wiki_dico_path)  # load knwoledge base
     json_str = json_file.read()
@@ -88,7 +86,7 @@ def ConstructDatabaseFromKnwoledgebase(wiki_dico_path):
         json.dump(le_name_mapping, fp,default=default)
     print(le_name_mapping)
     df_database["Class_le"] = df_database.Class.map(le_name_mapping)
-    df_database.to_csv(database_file, header=True, index=False, sep=";")
+    df_database.to_csv(database_file_ouput, header=True, index=False, sep=";")
 
 def label_sentences(df,content_columns="Content",w=None):
     labeled_sentences = []
@@ -140,7 +138,7 @@ def get_df_keyword_from_content(df,content_col,class_col):
     df_k.to_csv("keywords_database.csv",sep=";",index=False)
     return df_k
 
-def ImportDatabase(content_col="Content", class_col="Class_le",sampling=True,split=True,sort=True):
+def ImportDatabase(database_file,content_col="Content", class_col="Class_le",sampling=True,split=True,sort=True):
   df = pd.read_csv(database_file,header=0,sep=";",encoding="utf-8")
   if split:
     df = split_content(df,content_col,class_col)

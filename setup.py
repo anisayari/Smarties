@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(name='Smarties',
 
-      version='0.1.1',
+      version='0.9',
 
       url='https://github.com/anisayari/Smarties',
 
-      license='GPUL3',
+      license='GPL3',
 
       author='Anis Ayari',
 
