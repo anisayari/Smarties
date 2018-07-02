@@ -42,3 +42,9 @@ Please feel free to contribute ! Report any bugs in the issue section.
 - [x] Database creation from a json (Wikipedia learning, Datastructure, sampling..)
 - [x] Create text classification algorithm (GridSearch, RFC, Doc2Vec)
 - [x] Input example and return classification
+
+### LICENSE
+
+Please be aware that this code is under the GPL3 license. 
+You must report each utilisation of this code the author of this code. 
+Please push your code using this API on a forked Github repo public. 
