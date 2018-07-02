@@ -1,4 +1,4 @@
-import TextClassifier.TextClassifier as tc
+import Smarties as tc
 
 
 wiki_dico_path = "wiki_dico.json"

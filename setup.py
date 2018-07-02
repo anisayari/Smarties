@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 
-setup(name='SmartTextClassifier',
+setup(name='Smarties',
 
       version='0.1',
 
-      url='https://github.com/anisayari/SmartTextClassifier',
+      url='https://github.com/anisayari/Smarties',
 
       license='GPUL3',
 
@@ -23,9 +23,8 @@ setup(name='SmartTextClassifier',
       setup_requires=['nltk',
                       'gensim',
                       'wikipedia',
-                      'sklearn',
+                      'scikit-learn',
                       'pandas',
-                      'numpy',
-                      'json'],
+                      'numpy'],
 
       test_suite='nose.collector')
