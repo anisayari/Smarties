@@ -13,8 +13,8 @@ on a live system.
 ### Prerequisites
 
 You need to have python 3.+ install on your machine. 
-```
-Give examples
-```
 
 ### Installing
+```
+pip install Smarties
+```
