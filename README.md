@@ -1,7 +1,7 @@
-# SmartTextClassifier
+# SmartTies
 
 
-SmartTextClassifier use an innovative approach based on Wikipedia auto-learning to classify 
+Smarties is a Text Classifier using an innovative approach based on Wikipedia auto-learning to classify 
 any documents/text. We use a Machine Learning and Doc2Vec algorithms.
 
 ## Getting Started
