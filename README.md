@@ -1,10 +1,10 @@
-# Smarties
+# Smarties :art:
 
 
 Smarties is a Text Classifier using an innovative approach based on Wikipedia auto-learning to classify 
 any documents/text. We use a Machine Learning and Doc2Vec algorithms.
 
-## Getting Started
+## Getting Started :beginner:
 
 These instructions will get you a copy of the project up and running on your local machine 
 for development and testing purposes. See deployment for notes on how to deploy the project 
@@ -19,7 +19,7 @@ You need to have python 3.+ install on your machine.
 pip install Smarties
 ```
 
-### Example
+### Example :round_pushpin:
 ```
 wiki_dico_path = "wiki_dico.json"
 
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     sm.Predict(classifier,model,df,sentence_to_predict)
 ```
 
-### TODO
+### TODO :grin:
 Please feel free to contribute ! Report any bugs in the issue section. 
 
 - [ ] Complete Code documentation and README
