@@ -6,11 +6,17 @@ wiki_dico_path = "wiki_dico.json"
 #database_file = "corpus.csv"
 
 if __name__ == '__main__':
+    sm.ConstructWikiDico(wiki_dico_path, 'Soccer', 'Soccer')
+    sm.ConstructWikiDico(wiki_dico_path, 'Baseball', 'Baseball')
+    sm.ConstructWikiDico(wiki_dico_path, 'Golf', 'Golf')
+    sm.ConstructWikiDico(wiki_dico_path, 'Basketball', 'Basketball')
+    sm.ConstructWikiDico(wiki_dico_path, 'Judo', 'Judo')
+    
     sm.ConstructDatabaseFromKnwoledgebase(wiki_dico_path,database_file_ouput="database_file_custom_name.csv")
+    
     df = sm.ImportDatabase(database_file = "database_file_custom_name.csv")
 
     classifier,model,df = sm.ModelFromDatabase(df)
 
-    sentence_to_predict = "An individual's, nation's, or organization's carbon footprint can be measured by undertaking a GHG emissions assessment or other calculative activities denoted as carbon accounting. "
-
+    sentence_to_predict = "The French soccer team is perhaps one of the best team around the world."
     sm.Predict(classifier,model,df,sentence_to_predict)
