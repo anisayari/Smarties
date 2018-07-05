@@ -112,9 +112,9 @@ def ConstructWikiDico(wiki_dico_path,title,theme):
         if theme not in wiki_dico:
             AddEntryToJson(wiki_dico_path,theme)
             print('Theme {} created with sucess !'.format(theme))
-        for theme, criteria_dico in wiki_dico.items():
-            for criteria, value in criteria_dico.items():
-                page_id_list.append(value)
+        #for theme, criteria_dico in wiki_dico.items():
+            #for criteria, value in criteria_dico.items():
+                #page_id_list.append(value)
         if pageid not in page_id_list:
             try:
                 AddEntryToJson(wiki_dico_path, theme, pageid=pageid, title=title)
