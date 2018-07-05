@@ -50,8 +50,89 @@ def split_content(df, content_col, class_col):
     df.columns=[content_col, class_col]
     return df
 
-def CleanWikiPage(content):
+def AddEntryToJson(wiki_dico_path,theme,pageid=0,title=''):
+    json_file = open(wiki_dico_path)
+    json_str = json_file.read()
+    wiki_dico = json.loads(json_str)
+    if theme not in wiki_dico:
+        wiki_dico[theme]={}
+    if pageid:
+        title = title.replace(" ", "_")
+        wiki_dico[theme].update(({title: int(pageid)}))
+    with open(wiki_dico_path, 'w') as fp:
+        json.dump(wiki_dico, fp)
+    print("Thank you, {} add been succesfully added to my Brain :-D".format(title.replace('_','')))
 
+
+def GetGlobalPageIDWikiLinksList(page_id):
+    page_primary = wikipedia.page(pageid=page_id)
+    links = page_primary.links
+    page_id_dico={}
+    for link in links:
+        page_id_dico[link]=GetPageID(title=link)
+        print('\r {0}'.format(link), end='')
+    return page_id_dico
+
+def GetPageID(title):
+    parameters = {'action': 'query',
+                  'prop': 'revisions',
+                  'titles': urllib.parse.quote(title.encode("utf8")),
+                  'rvprop': 'content',
+                  'format': 'json'}
+    queryString = "&".join("%s=%s" % (k, v) for k, v in parameters.items())
+    queryString = queryString + "&redirects"
+    url = "http://%s.wikipedia.org/w/api.php?%s" % ('en', queryString)
+    request = urllib.request.urlopen(url)
+    encoding = request.headers.get_content_charset()
+    jsonData = request.read().decode(encoding)
+    data = json.loads(jsonData)
+    data = data["query"]
+    if next(iter(data["pages"])) == "-1":
+        return 0
+    return int(next(iter(data["pages"])))
+
+def ConstructWikiDico(wiki_dico_path,title,theme):
+    pageid=GetPageID(title)
+    if pageid == 0:
+        suggest = wikipedia.suggest(title)
+        if suggest != None:
+            ConstructWikiDico(wiki_dico_path,suggest,theme)
+        else:
+            print('I\'m sorry, but I Cannot find any article or suggestions for %s, please try again' % title)
+            return 0
+    else:
+        if not os.path.isfile(wiki_dico_path):
+            with open(wiki_dico_path, 'w') as fp:
+                json.dump({}, fp)
+            print(wiki_dico_path+' Succesfully created')
+        json_file = open(wiki_dico_path)
+        json_str = json_file.read()
+        wiki_dico = json.loads(json_str)
+        page_id_list = []
+        if theme not in wiki_dico:
+            AddEntryToJson(wiki_dico_path,theme)
+            print('Theme {} created with sucess !'.format(theme))
+        for theme, criteria_dico in wiki_dico.items():
+            for criteria, value in criteria_dico.items():
+                page_id_list.append(value)
+        if pageid not in page_id_list:
+            try:
+                AddEntryToJson(wiki_dico_path, theme, pageid=pageid, title=title)
+                print('Title {} added with sucess to the theme {} !'.format(title,theme))
+                page_id_dico = GetGlobalPageIDWikiLinksList(pageid)
+                for key,value in page_id_dico.items():
+                    AddEntryToJson(wiki_dico_path, theme, pageid=value, title=key)
+                return pageid
+            except wikipedia.exceptions.DisambiguationError as e:
+                print('Look like I found many related topic about that... select one and type it again please:')
+                for word in e.options:
+                    print(word)
+        else:
+            print( '\nHum, look like I already know this Wikipedia Article ' + title + ' try to learn me something else please ! \n')
+            return None
+        return None
+
+def CleanWikiPage(content):
     content = re.sub('=.*=', '',content) #remove = sign from title
     content = content.replace(";",'') #delete all ; sign to be sure to not be confuse when saveing df as csv
     content = ''.join(content.splitlines())
@@ -86,7 +167,7 @@ def ConstructDatabaseFromKnwoledgebase(wiki_dico_path,database_file_ouput):
         json.dump(le_name_mapping, fp,default=default)
     print(le_name_mapping)
     df_database["Class_le"] = df_database.Class.map(le_name_mapping)
-    df_database.to_csv(database_file_ouput, header=True, index=False, sep=";")
+    df_database.to_csv(database_file, header=True, index=False, sep=";")
 
 def label_sentences(df,content_columns="Content",w=None):
     labeled_sentences = []
