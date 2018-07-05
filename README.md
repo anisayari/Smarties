@@ -24,13 +24,23 @@ pip install Smarties
 wiki_dico_path = "wiki_dico.json"
 
 if __name__ == '__main__':
+    #construct the knowledge base to a wiki_dico.json file
+    sm.ConstructWikiDico(wiki_dico_path, 'Soccer', 'Soccer')
+    sm.ConstructWikiDico(wiki_dico_path, 'Baseball', 'Baseball')
+    sm.ConstructWikiDico(wiki_dico_path, 'Golf', 'Golf')
+    sm.ConstructWikiDico(wiki_dico_path, 'Basketball', 'Basketball')
+    sm.ConstructWikiDico(wiki_dico_path, 'Judo', 'Judo')
+    
+    #Construct and import database from our database previously defined
     sm.ConstructDatabaseFromKnwoledgebase(wiki_dico_path,database_file_ouput="database_file_custom_name.csv")
     df = sm.ImportDatabase(database_file = "database_file_custom_name.csv")
 
+    #Run model training
     classifier,model,df = sm.ModelFromDatabase(df)
 
     sentence_to_predict = "An individual's, nation's, or organization's carbon footprint can be measured by undertaking a GHG emissions assessment or other calculative activities denoted as carbon accounting. "
 
+    #Predict the class of our sample
     sm.Predict(classifier,model,df,sentence_to_predict)
 ```
 
@@ -40,7 +50,7 @@ Please feel free to contribute ! Report any bugs in the issue section.
 - [ ] Complete Code documentation and README
 - [x] Build a basis code
 - [x] Text processing (Clean, tokenizing,...)
-- [ ] Wikipedia auto-search by class
+- [x] Wikipedia auto-search by class
 - [x] Database creation from a json (Wikipedia learning, Datastructure, sampling..)
 - [x] Create text classification algorithm (RAKE, GridSearch, RFC, Doc2Vec)
 - [x] Input example and return classification
