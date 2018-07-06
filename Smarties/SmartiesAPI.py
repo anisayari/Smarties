@@ -13,6 +13,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier as RFC
 from . import rake
+import urllib
+import os
 
 stoppath = "Stoplist.txt"
 mapping_file = 'mapping.json'
@@ -63,14 +65,34 @@ def AddEntryToJson(wiki_dico_path,theme,pageid=0,title=''):
         json.dump(wiki_dico, fp)
     print("Thank you, {} add been succesfully added to my Brain :-D".format(title.replace('_','')))
 
+def UpWikiDico(page_id_dico):
+    #Remove common content and sampling
+    #Remove intersection
+    list_key = list(page_id_dico.keys())
+    intersection_list = []
+    for i in range(0, len(list_key) - 1):
+        for j in range(i + 1, len(list_key)):
+            intersection_list += list(
+                                        set(list(page_id_dico[list_key[i]].values()))
+                                        .intersection(
+                                                        list(page_id_dico[list_key[j]].values())
+                                                    )
+                                    )
+    for key,values in page_id_dico.items():
+        page_id_dico[key] = {k: v for k, v in values.items() if v not in intersection_list}
+    #Sampling with random selection
+    print(page_id_dico)
+    return page_id_dico
 
 def GetGlobalPageIDWikiLinksList(page_id):
     page_primary = wikipedia.page(pageid=page_id)
     links = page_primary.links
     page_id_dico={}
+    i=0
     for link in links:
         page_id_dico[link]=GetPageID(title=link)
-        print('\r {0}'.format(link), end='')
+        print('\r {0}/{1}'.format(i,len(links)), end='')
+        i+=1
     return page_id_dico
 
 def GetPageID(title):
@@ -91,46 +113,53 @@ def GetPageID(title):
         return 0
     return int(next(iter(data["pages"])))
 
-def ConstructWikiDico(wiki_dico_path,title,theme):
-    pageid=GetPageID(title)
-    if pageid == 0:
-        suggest = wikipedia.suggest(title)
-        if suggest != None:
-            ConstructWikiDico(wiki_dico_path,suggest,theme)
+def ConstructWikiDico(wiki_dico_path,title_theme_list,init=False):
+    page_id_dico ={}
+    for title,theme in title_theme_list:
+        pageid=GetPageID(title)
+        if pageid != 0:
+            # If page has been found
+            if not os.path.isfile(wiki_dico_path):
+                with open(wiki_dico_path, 'w') as fp:
+                    json.dump({}, fp)
+                print(wiki_dico_path+' Succesfully created')
+            json_file = open(wiki_dico_path)
+            json_str = json_file.read()
+            wiki_dico = json.loads(json_str)
+            page_id_list = []
+            if theme not in wiki_dico:
+                AddEntryToJson(wiki_dico_path,theme)
+                print('Theme {} created with sucess !'.format(theme))
+            if pageid not in page_id_list:
+                try:
+                    AddEntryToJson(wiki_dico_path, theme=theme, pageid=pageid, title=title)
+                    #print('Title {} added with sucess to the theme {} !'.format(title,theme))
+                    page_id_dico[theme] = GetGlobalPageIDWikiLinksList(pageid)
+                except wikipedia.exceptions.DisambiguationError as e:
+                    print('Look like I found many related topic about that... select one and type it again please:')
+                    for word in e.options:
+                        print(word)
+            else:
+                print( '\nHum, look like I already know this Wikipedia Article ' + title + ' try to learn me something else please ! \n')
         else:
-            print('I\'m sorry, but I Cannot find any article or suggestions for %s, please try again' % title)
-            return 0
-    else:
-        if not os.path.isfile(wiki_dico_path):
+            # else try to reach a suggestion page
+            suggest = wikipedia.suggest(title)
+            if suggest != None:
+                print('Title {} of the theme {} had not been found, try to reach: !'.format(title,theme,suggest))
+                ConstructWikiDico(wiki_dico_path,(suggest,theme))
+            else:
+                print('I\'m sorry, but I Cannot find any article or suggestions for %s in the theme, please try again'.format(title,theme))
+                pass
+
+        page_id_dico = UpWikiDico(page_id_dico)
+        if init :
             with open(wiki_dico_path, 'w') as fp:
-                json.dump({}, fp)
-            print(wiki_dico_path+' Succesfully created')
-        json_file = open(wiki_dico_path)
-        json_str = json_file.read()
-        wiki_dico = json.loads(json_str)
-        page_id_list = []
-        if theme not in wiki_dico:
-            AddEntryToJson(wiki_dico_path,theme)
-            print('Theme {} created with sucess !'.format(theme))
-        #for theme, criteria_dico in wiki_dico.items():
-            #for criteria, value in criteria_dico.items():
-                #page_id_list.append(value)
-        if pageid not in page_id_list:
-            try:
-                AddEntryToJson(wiki_dico_path, theme, pageid=pageid, title=title)
-                print('Title {} added with sucess to the theme {} !'.format(title,theme))
-                page_id_dico = GetGlobalPageIDWikiLinksList(pageid)
-                for key,value in page_id_dico.items():
-                    AddEntryToJson(wiki_dico_path, theme, pageid=value, title=key)
-                return pageid
-            except wikipedia.exceptions.DisambiguationError as e:
-                print('Look like I found many related topic about that... select one and type it again please:')
-                for word in e.options:
-                    print(word)
+                json.dump(page_id_dico, fp)
         else:
-            print( '\nHum, look like I already know this Wikipedia Article ' + title + ' try to learn me something else please ! \n')
-            return None
-        return None
+            for theme, dico in page_id_dico.items():
+                for title, pageid in dico.items():
+                    AddEntryToJson(wiki_dico_path, theme, pageid=pageid, title=title)
+
 
 def CleanWikiPage(content):
     content = re.sub('=.*=', '',content) #remove = sign from title
@@ -167,7 +196,7 @@ def ConstructDatabaseFromKnwoledgebase(wiki_dico_path,database_file_ouput):
         json.dump(le_name_mapping, fp,default=default)
     print(le_name_mapping)
     df_database["Class_le"] = df_database.Class.map(le_name_mapping)
-    df_database.to_csv(database_file, header=True, index=False, sep=";")
+    df_database.to_csv(database_file_ouput, header=True, index=False, sep=";")
 
 def label_sentences(df,content_columns="Content",w=None):
     labeled_sentences = []
