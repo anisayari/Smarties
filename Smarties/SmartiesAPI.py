@@ -17,11 +17,10 @@ import urllib
 import os
 import random
 
-stoppath = "Stoplist.txt"
 mapping_file = 'mapping.json'
 
 
-def TexttoKeywordDataframe(text, class_le):
+def TexttoKeywordDataframe(text, class_le,stoppath):
     # print('Keyword Extraction by NLTK, In Progress...')
     rake_object = rake.Rake(stoppath, 5, 2, 5)
     keywords = rake_object.run(text)
@@ -68,42 +67,39 @@ def AddEntryToJson(wiki_dico_path, theme, pageid=0, title=''):
         wiki_dico[theme].update(({title: int(pageid)}))
     with open(wiki_dico_path, 'w') as fp:
         json.dump(wiki_dico, fp)
-    print("\n {0} had been succesfully added to the knowledge base".format(title.replace('_', '')))
+    print("[INFO] {0} had been succesfully added to the knowledge base".format(title.replace('_', '')))
 
 
-def UpWikiDico(page_id_dico):
+def UpWikiDico(wiki_dico):
+    print("[INFO] Start sort and sampling...")
     # Remove common content and sampling
-    list_key = list(page_id_dico.keys())
+    theme_list = list(wiki_dico.keys())
     intersection_list = []
-    for i in range(0, len(list_key) - 1):
-        for j in range(i + 1, len(list_key)):
+    for i in range(0, len(theme_list) - 1):
+        for j in range(i + 1, len(theme_list)):
             intersection_list += list(
-                set(list(page_id_dico[list_key[i]].values()))
+                set(list(wiki_dico[theme_list[i]].keys()))
                     .intersection(
-                    list(page_id_dico[list_key[j]].values())
+                    list(wiki_dico[theme_list[j]].keys())
                 )
             )
 
-    n = 5
+    n = 20
     #remove intersection + sampling
-    for key, values in page_id_dico.items():
-        key_random = list(random.sample(values, n))
-        page_id_dico[key] = {k: v for k, v in values.items() if v not in intersection_list and k in key_random}
-    return page_id_dico
+    for key, values in wiki_dico.items():
+        key_random = list(random.sample(list(values), n))
+        wiki_dico[key] = {k: v for k, v in values.items() if v not in intersection_list and k in key_random}
+    print("[INFO] Sort and sampling done")
+    return wiki_dico
 
-def GetGlobalPageIDWikiLinksList(page_id):
-    page_primary = wikipedia.page(pageid=page_id)
-    links = page_primary.links
-    page_id_dico = {}
-    i = 0
-    #n=100
-    #if len(links)>100:
-        #links = random.sample(values, n)
+def GetGlobalPageIDWikiLinksList(links):
+    wiki_dico__for_one_theme = {}
+    i = 1
     for link in links:
-        page_id_dico[link] = GetPageID(title=link)
-        print('\r {0}/{1}'.format(i, len(links)), end='')
+        wiki_dico__for_one_theme[link] = GetPageID(title=link)
+        print('[INFO] Getting links in progress... \r {0}/{1}'.format(i, len(links)), end='')
         i += 1
-    return page_id_dico
+    return wiki_dico__for_one_theme
 
 
 def GetPageID(title):
@@ -125,54 +121,69 @@ def GetPageID(title):
     return int(next(iter(data["pages"])))
 
 
-def ConstructWikiDico(wiki_dico_path, title_theme_list, init=False):
-    page_id_dico = {}
-    for title, theme in title_theme_list:
+def ConstructWikiDico(wiki_dico_path, title_theme_list, init=False,find_links=False):
+    #check if wiki dico exist or created
+    if not os.path.isfile(wiki_dico_path):
+        with open(wiki_dico_path, 'w') as fp:
+            json.dump({}, fp)
+        print(wiki_dico_path + ' Succesfully created')
+    #load it
+    json_file = open(wiki_dico_path)
+    json_str = json_file.read()
+    wiki_dico = json.loads(json_str)
+
+    for title,theme in title_theme_list:
+        #create sublist of wikipedia links sampled
+        if theme not in list(wiki_dico.keys()):
+            wiki_dico[theme] = {}
         pageid = GetPageID(title)
         if pageid != 0:
             # If page has been found
-            if not os.path.isfile(wiki_dico_path):
-                with open(wiki_dico_path, 'w') as fp:
-                    json.dump({}, fp)
-                print(wiki_dico_path + ' Succesfully created')
-            json_file = open(wiki_dico_path)
-            json_str = json_file.read()
-            wiki_dico = json.loads(json_str)
-            page_id_list = []
-            if theme not in wiki_dico:
-                AddEntryToJson(wiki_dico_path, theme)
-                print('Theme {} created with sucess !'.format(theme))
-            if pageid not in page_id_list:
+            if pageid not in wiki_dico[theme]:
                 try:
                     AddEntryToJson(wiki_dico_path, theme=theme, pageid=pageid, title=title)
                     # print('Title {} added with sucess to the theme {} !'.format(title,theme))
-                    page_id_dico[theme] = GetGlobalPageIDWikiLinksList(pageid)
                 except wikipedia.exceptions.DisambiguationError as e:
-                    print('Look like I found many related topic about that... select one and type it again please:')
+                    print('[ERROR] Look like I found many related topic about that... select one and try again please:')
                     for word in e.options:
                         print(word)
+                page_primary = wikipedia.page(pageid=pageid)
+                links = page_primary.links
+                dico_tmp = {key: 0 for key in links if key not in list(wiki_dico[theme])}
+                for key,value in dico_tmp.items():
+                    if key in list(dico_tmp.keys()):
+                        wiki_dico[theme][key]=dico_tmp[key]
+                    else:
+                        wiki_dico[theme][key]=value
             else:
                 print(
-                    '\nHum, look like I already know this Wikipedia Article ' + title + ' try to learn me something else please ! \n')
+                    '[ERROR] Hum, look like I already know this Wikipedia Article ' + title + ' try to learn me something else please ! \n')
+
         else:
             suggest = wikipedia.suggest(title)  # else try to reach a suggestion page
             if suggest is not None:
-                print('Title {} of the theme {} had not been found, try to reach: !'.format(title, theme, suggest))
+                print('[INFO] Title {} of the theme {} had not been found, try to reach: !'.format(title, theme, suggest))
                 ConstructWikiDico(wiki_dico_path, (suggest, theme))
             else:
                 print(
-                    'I\'m sorry, but I Cannot find any article or suggestions for %s in the theme, please try again'.format(
+                    '[ERROR] I\'m sorry, but I Cannot find any article or suggestions for %s in the theme, please try again'.format(
                         title, theme))
                 pass
 
-    page_id_dico = UpWikiDico(page_id_dico)
+    wiki_dico = UpWikiDico(wiki_dico)
+    for title, theme in title_theme_list:
+        print('\n[INFO] Getting Wikipedia links for {}'.format(theme))
+        wiki_dico[theme] = GetGlobalPageIDWikiLinksList(wiki_dico[theme])
+
     if init:
         with open(wiki_dico_path, 'w') as fp:
-            json.dump(page_id_dico, fp)
+            json.dump(wiki_dico, fp)
     else:
-        for theme, dico in page_id_dico.items():
+        for theme, dico in wiki_dico.items():
             for title, pageid in dico.items():
                 AddEntryToJson(wiki_dico_path, theme, pageid=pageid, title=title)
+
+    print('[INFO] Construct Knowledge base from Wikipedia DONE.')
 
 
 def CleanWikiPage(content):
@@ -195,11 +206,14 @@ def ConstructDatabaseFromKnwoledgebase(wiki_dico_path, database_file_ouput):
     json_str = json_file.read()
     wiki_dico = json.loads(json_str)
     for key, value in wiki_dico.items():
+        print('----------------{}----------------'.format(str(key)))
         for key2, value2 in value.items():
-            page = CleanWikiPage(wikipedia.page(pageid=value2).content)
+            print('Getting page \r{}'.format(str(key2)))
+            try:
+                page = CleanWikiPage(wikipedia.page(pageid=value2).content)
+            except AttributeError:
+                print('[ERROR] PageID do not valid for {0} with pageid: {1}'.format(key2,value2))
             # add new entry in database
-            if key or key2 is '':
-                pass
             df_tmp = pd.DataFrame({"Content": page,
                                    "Class": key,
                                    "SubClass": key2}, index=[0])
@@ -257,25 +271,26 @@ def train_classifier(X, y):
     return clf
 
 
-def get_df_keyword_from_content(df, content_col, class_col):
+def get_df_keyword_from_content(df, content_col, class_col,stoppath):
     df_k = pd.DataFrame()
     for text in df.groupby([class_col])[content_col]:
         class_le = text[0]
         full_text = ''.join(text[1])
-        df, keywords = TexttoKeywordDataframe(full_text, class_le)
+        df, keywords = TexttoKeywordDataframe(full_text, class_le,stoppath)
         df_k = df_k.append(df)
     df_k.to_csv("keywords_database.csv", sep=";", index=False)
     return df_k
 
 
-def ImportDatabase(database_file, content_col="Content", class_col="Class_le", sampling=True, split=True, sort=True):
+def ImportDatabase(database_file, content_col="Content", class_col="Class_le",stoppath="Stoplist.txt", sampling=True, split=True, sort=True):
+    print('[INFO] Import DATABASE')
     df = pd.read_csv(database_file, header=0, sep=";", encoding="utf-8")
     if split:
         df = split_content(df, content_col, class_col)
     if sampling:
         df = sampling_class(df, class_col)
     if sort:
-        df_k = get_df_keyword_from_content(df, content_col, class_col)
+        df_k = get_df_keyword_from_content(df, content_col, class_col,stoppath)
         for keyword_list in df_k.groupby(class_col)['KeyWord']:
             class_le = keyword_list[0]
             keyword_list = keyword_list[1]
