@@ -8,34 +8,37 @@ import json
 import numpy as np
 from gensim.models.doc2vec import LabeledSentence
 from gensim.models import Doc2Vec
-from nltk.stem.wordnet import WordNetLemmatizer
+# from nltk.stem.wordnet import WordNetLemmatizer
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier as RFC
 from . import rake
 import urllib
 import os
+import random
 
 stoppath = "Stoplist.txt"
 mapping_file = 'mapping.json'
 
-def TexttoKeywordDataframe(text,class_le):
-    #print('Keyword Extraction by NLTK, In Progress...')
+
+def TexttoKeywordDataframe(text, class_le):
+    # print('Keyword Extraction by NLTK, In Progress...')
     rake_object = rake.Rake(stoppath, 5, 2, 5)
     keywords = rake_object.run(text)
     if len(keywords) == 0:
         print(
             'Hum no keyword find, are you sure it\s an english document ?? Or I cannot understand this document sorry')
         return None
-    #remove words with \
+    # remove words with \
     keywords = [i for i in keywords if "\\" not in keywords[0]]
     df = pd.DataFrame(keywords)
     df.pivot(columns=0, values=1)
     df.columns = ['KeyWord', "Score"]
-    df["Class_le"]=int(class_le)
+    df["Class_le"] = int(class_le)
     df.Score = df.Score.round(2)
-    #print(df)
-    return df,keywords
+    # print(df)
+    return df, keywords
+
 
 def sampling_class(df, class_col):
     df_tmp = pd.DataFrame()
@@ -44,56 +47,64 @@ def sampling_class(df, class_col):
         df_tmp = df_tmp.append(df[df[class_col] == c].sample(len_min), ignore_index=True)
     return df_tmp
 
+
 def split_content(df, content_col, class_col):
-  #split each document by sentences
-  #TODO need to be defined
+    # split each document by sentences
+    # TODO need to be defined
     df = pd.concat([pd.Series(row[class_col], row[content_col].split('.'))
-               for _, row in df.iterrows()]).reset_index()
-    df.columns=[content_col, class_col]
+                    for _, row in df.iterrows()]).reset_index()
+    df.columns = [content_col, class_col]
     return df
 
-def AddEntryToJson(wiki_dico_path,theme,pageid=0,title=''):
+
+def AddEntryToJson(wiki_dico_path, theme, pageid=0, title=''):
     json_file = open(wiki_dico_path)
     json_str = json_file.read()
     wiki_dico = json.loads(json_str)
     if theme not in wiki_dico:
-        wiki_dico[theme]={}
+        wiki_dico[theme] = {}
     if pageid:
         title = title.replace(" ", "_")
         wiki_dico[theme].update(({title: int(pageid)}))
     with open(wiki_dico_path, 'w') as fp:
         json.dump(wiki_dico, fp)
-    print("Thank you, {} add been succesfully added to my Brain :-D".format(title.replace('_','')))
+    print("\n {0} had been succesfully added to the knowledge base".format(title.replace('_', '')))
+
 
 def UpWikiDico(page_id_dico):
-    #Remove common content and sampling
-    #Remove intersection
+    # Remove common content and sampling
     list_key = list(page_id_dico.keys())
     intersection_list = []
     for i in range(0, len(list_key) - 1):
         for j in range(i + 1, len(list_key)):
             intersection_list += list(
-                                        set(list(page_id_dico[list_key[i]].values()))
-                                        .intersection(
-                                                        list(page_id_dico[list_key[j]].values())
-                                                    )
-                                    )
-    for key,values in page_id_dico.items():
-        page_id_dico[key] = {k: v for k, v in values.items() if v not in intersection_list}
-    #Sampling with random selection
-    print(page_id_dico)
+                set(list(page_id_dico[list_key[i]].values()))
+                    .intersection(
+                    list(page_id_dico[list_key[j]].values())
+                )
+            )
+
+    n = 5
+    #remove intersection + sampling
+    for key, values in page_id_dico.items():
+        key_random = list(random.sample(values, n))
+        page_id_dico[key] = {k: v for k, v in values.items() if v not in intersection_list and k in key_random}
     return page_id_dico
 
 def GetGlobalPageIDWikiLinksList(page_id):
     page_primary = wikipedia.page(pageid=page_id)
     links = page_primary.links
-    page_id_dico={}
-    i=0
+    page_id_dico = {}
+    i = 0
+    #n=100
+    #if len(links)>100:
+        #links = random.sample(values, n)
     for link in links:
-        page_id_dico[link]=GetPageID(title=link)
-        print('\r {0}/{1}'.format(i,len(links)), end='')
-        i+=1
+        page_id_dico[link] = GetPageID(title=link)
+        print('\r {0}/{1}'.format(i, len(links)), end='')
+        i += 1
     return page_id_dico
+
 
 def GetPageID(title):
     parameters = {'action': 'query',
@@ -113,67 +124,72 @@ def GetPageID(title):
         return 0
     return int(next(iter(data["pages"])))
 
-def ConstructWikiDico(wiki_dico_path,title_theme_list,init=False):
-    page_id_dico ={}
-    for title,theme in title_theme_list:
-        pageid=GetPageID(title)
+
+def ConstructWikiDico(wiki_dico_path, title_theme_list, init=False):
+    page_id_dico = {}
+    for title, theme in title_theme_list:
+        pageid = GetPageID(title)
         if pageid != 0:
             # If page has been found
             if not os.path.isfile(wiki_dico_path):
                 with open(wiki_dico_path, 'w') as fp:
                     json.dump({}, fp)
-                print(wiki_dico_path+' Succesfully created')
+                print(wiki_dico_path + ' Succesfully created')
             json_file = open(wiki_dico_path)
             json_str = json_file.read()
             wiki_dico = json.loads(json_str)
             page_id_list = []
             if theme not in wiki_dico:
-                AddEntryToJson(wiki_dico_path,theme)
+                AddEntryToJson(wiki_dico_path, theme)
                 print('Theme {} created with sucess !'.format(theme))
             if pageid not in page_id_list:
                 try:
                     AddEntryToJson(wiki_dico_path, theme=theme, pageid=pageid, title=title)
-                    #print('Title {} added with sucess to the theme {} !'.format(title,theme))
+                    # print('Title {} added with sucess to the theme {} !'.format(title,theme))
                     page_id_dico[theme] = GetGlobalPageIDWikiLinksList(pageid)
                 except wikipedia.exceptions.DisambiguationError as e:
                     print('Look like I found many related topic about that... select one and type it again please:')
                     for word in e.options:
                         print(word)
             else:
-                print( '\nHum, look like I already know this Wikipedia Article ' + title + ' try to learn me something else please ! \n')
+                print(
+                    '\nHum, look like I already know this Wikipedia Article ' + title + ' try to learn me something else please ! \n')
         else:
-            # else try to reach a suggestion page
-            suggest = wikipedia.suggest(title)
-            if suggest != None:
-                print('Title {} of the theme {} had not been found, try to reach: !'.format(title,theme,suggest))
-                ConstructWikiDico(wiki_dico_path,(suggest,theme))
+            suggest = wikipedia.suggest(title)  # else try to reach a suggestion page
+            if suggest is not None:
+                print('Title {} of the theme {} had not been found, try to reach: !'.format(title, theme, suggest))
+                ConstructWikiDico(wiki_dico_path, (suggest, theme))
             else:
-                print('I\'m sorry, but I Cannot find any article or suggestions for %s in the theme, please try again'.format(title,theme))
+                print(
+                    'I\'m sorry, but I Cannot find any article or suggestions for %s in the theme, please try again'.format(
+                        title, theme))
                 pass
 
-        page_id_dico = UpWikiDico(page_id_dico)
-        if init :
-            with open(wiki_dico_path, 'w') as fp:
-                json.dump(page_id_dico, fp)
-        else:
-            for theme, dico in page_id_dico.items():
-                for title, pageid in dico.items():
-                    AddEntryToJson(wiki_dico_path, theme, pageid=pageid, title=title)
+    page_id_dico = UpWikiDico(page_id_dico)
+    if init:
+        with open(wiki_dico_path, 'w') as fp:
+            json.dump(page_id_dico, fp)
+    else:
+        for theme, dico in page_id_dico.items():
+            for title, pageid in dico.items():
+                AddEntryToJson(wiki_dico_path, theme, pageid=pageid, title=title)
 
 
 def CleanWikiPage(content):
-    content = re.sub('=.*=', '',content) #remove = sign from title
-    content = content.replace(";",'') #delete all ; sign to be sure to not be confuse when saveing df as csv
+    content = re.sub('=.*=', '', content)  # remove = sign from title
+    content = content.replace(";", '')  # delete all ; sign to be sure to not be confuse when saveing df as csv
     content = ''.join(content.splitlines())
-    #with open("Output.txt", "w", encoding="utf-8") as text_file:
+    # with open("Output.txt", "w", encoding="utf-8") as text_file:
     #    text_file.write(content)
     return content
+
 
 def default(o):
     if isinstance(o, np.int64): return int(o)
     raise TypeError
 
-def ConstructDatabaseFromKnwoledgebase(wiki_dico_path,database_file_ouput):
+
+def ConstructDatabaseFromKnwoledgebase(wiki_dico_path, database_file_ouput):
     df_database = pd.DataFrame(columns=["Content", "Class", "SubClass"])
     json_file = open(wiki_dico_path)  # load knwoledge base
     json_str = json_file.read()
@@ -193,33 +209,35 @@ def ConstructDatabaseFromKnwoledgebase(wiki_dico_path,database_file_ouput):
     le.fit(df_database.Class)
     le_name_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
     with open(mapping_file, 'w') as fp:
-        json.dump(le_name_mapping, fp,default=default)
+        json.dump(le_name_mapping, fp, default=default)
     print(le_name_mapping)
     df_database["Class_le"] = df_database.Class.map(le_name_mapping)
     df_database.to_csv(database_file_ouput, header=True, index=False, sep=";")
 
-def label_sentences(df,content_columns="Content",w=None):
+
+def label_sentences(df, content_columns="Content", w=None):
     labeled_sentences = []
     for index, datapoint in df.iterrows():
         tokenized_words = re.findall(w, datapoint[content_columns].lower())
         labeled_sentences.append(LabeledSentence(words=tokenized_words, tags=['SENT_%s' % index]))
     return labeled_sentences
 
+
 def train_doc2vec_model(labeled_sentences):
     model = Doc2Vec(alpha=0.025, min_alpha=0.025)
     model.build_vocab(labeled_sentences)
     for epoch in range(10):
-        model.train(labeled_sentences,epochs=model.epochs,total_examples=model.corpus_count)
+        model.train(labeled_sentences, epochs=model.epochs, total_examples=model.corpus_count)
         model.alpha -= 0.002
         model.min_alpha = model.alpha
     return model
 
-def vectorize_comments(df, d2v_model,df_init,type='Train'):
-    y = []
+
+def vectorize_comments(df, d2v_model, df_init, action='Train'):
     comments = []
     for i in range(0, df.shape[0]):
-        if type == 'Test':
-            index = df_init.shape[0]+i-1
+        if action == 'Test':
+            index = df_init.shape[0] + i - 1
         else:
             index = i
         label = 'SENT_%s' % index
@@ -227,87 +245,86 @@ def vectorize_comments(df, d2v_model,df_init,type='Train'):
     df['vectorized_comments'] = comments
     return df
 
-def train_classifier(X,y):
-    n_estimators = [100,400]
+
+def train_classifier(X, y):
+    n_estimators = [100, 400]
     min_samples_split = [2]
     min_samples_leaf = [1]
-    bootstrap = [True]
     parameters = {'n_estimators': n_estimators, 'min_samples_leaf': min_samples_leaf,
                   'min_samples_split': min_samples_split}
-    clf = GridSearchCV(RFC(verbose=1,n_jobs=4), cv=2, param_grid=parameters)
+    clf = GridSearchCV(RFC(verbose=1, n_jobs=4), cv=2, param_grid=parameters)
     clf.fit(X, y)
     return clf
 
-def get_df_keyword_from_content(df,content_col,class_col):
-    df_k= pd.DataFrame()
+
+def get_df_keyword_from_content(df, content_col, class_col):
+    df_k = pd.DataFrame()
     for text in df.groupby([class_col])[content_col]:
         class_le = text[0]
-        full_text=''.join(text[1])
-        df,keywords = TexttoKeywordDataframe(full_text,class_le)
+        full_text = ''.join(text[1])
+        df, keywords = TexttoKeywordDataframe(full_text, class_le)
         df_k = df_k.append(df)
-    df_k.to_csv("keywords_database.csv",sep=";",index=False)
+    df_k.to_csv("keywords_database.csv", sep=";", index=False)
     return df_k
 
-def ImportDatabase(database_file,content_col="Content", class_col="Class_le",sampling=True,split=True,sort=True):
-  df = pd.read_csv(database_file,header=0,sep=";",encoding="utf-8")
-  if split:
-    df = split_content(df,content_col,class_col)
-  if sort:
-    df_k = get_df_keyword_from_content(df, content_col,class_col)
-  if sampling:
-    df = sampling_class(df,class_col)
-  if sort:
-    for keyword_list in df_k.groupby(class_col)['KeyWord']:
-        class_le = keyword_list[0]
-        keyword_list = keyword_list[1]
-        for index, row in df.iterrows():
-            find = False
-            if row[class_col] == class_le:
-                for keyword in keyword_list :
-                    if keyword in row[content_col]:
-                        find = True
-                if not find:
-                    df.drop(index, inplace=True)
-  df.reset_index(inplace=True)
-  return df
-  
+
+def ImportDatabase(database_file, content_col="Content", class_col="Class_le", sampling=True, split=True, sort=True):
+    df = pd.read_csv(database_file, header=0, sep=";", encoding="utf-8")
+    if split:
+        df = split_content(df, content_col, class_col)
+    if sampling:
+        df = sampling_class(df, class_col)
+    if sort:
+        df_k = get_df_keyword_from_content(df, content_col, class_col)
+        for keyword_list in df_k.groupby(class_col)['KeyWord']:
+            class_le = keyword_list[0]
+            keyword_list = keyword_list[1]
+            for index, row in df.iterrows():
+                find = False
+                if row[class_col] == class_le:
+                    for keyword in keyword_list:
+                        if keyword in row[content_col]:
+                            find = True
+                    if not find:
+                        df.drop(index, inplace=True)
+    df.reset_index(inplace=True)
+    return df
+
+
 def ModelFromDatabase(df, content_col="Content", class_col="Class_le"):
-    #Sampling database
-    lmtzr = WordNetLemmatizer()
+    # Sampling database
+    # lmtzr = WordNetLemmatizer()
     w = re.compile("\w+", re.I)
-    sen = label_sentences(df,content_columns=content_col,w=w)
+    sen = label_sentences(df, content_columns=content_col, w=w)
     model = train_doc2vec_model(sen)
-    df = vectorize_comments(df,model,df)
+    df = vectorize_comments(df, model, df)
     X_train, X_test, y_train, y_test = train_test_split(df["vectorized_comments"].T.tolist(),
                                                         df[class_col], test_size=0.10, random_state=4)
     classifier = train_classifier(X_train, y_train)
-    #print(classifier.predict(X_test))
+    # print(classifier.predict(X_test))
     print(classifier.score(X_test, y_test))
-    return classifier,model,df
+    return classifier, df
 
-def Predict(clf,model,df_init,sentence,content_col='Content'):
+
+def Predict(clf, df_init, sentence, content_col='Content'):
     data = {'Content': [sentence]}
-    df =  pd.DataFrame(data)
-    with open(mapping_file) as f:
-        le_name_mapping = json.load(f)
+    df = pd.DataFrame(data)
     w = re.compile("\w+", re.I)
-    df=df_init.append(df)
+    df = df_init.append(df)
     df.reset_index(inplace=True)
     sen = label_sentences(df, content_columns=content_col, w=w)
     model = train_doc2vec_model(sen)
-    df = vectorize_comments(df,model,df,type='Train')
+    df = vectorize_comments(df, model, df, action='Train')
     X_test = df["vectorized_comments"].T.tolist()
-    X=[]
-    X.append(X_test[-1])
-    #print(clf.predict(X))
+    X = [X_test[-1]]
+    # print(clf.predict(X))
     print(clf.predict_proba(X))
     predicted = clf.predict(X)[0]
     print(predicted)
     with open(mapping_file) as f_in:
-       dict_mapping = json.load(f_in)
+        dict_mapping = json.load(f_in)
     for key, value in dict_mapping.items():
-      if predicted == value:
-        print("I think to  {} % that it is about: {}".format(round(float(clf.predict_proba(X)[0][value])*100,1),key))
-        break
-
-
+        if predicted == value:
+            print("I think to  {} % that it is about: {}".format(round(float(clf.predict_proba(X)[0][value]) * 100, 1),
+                                                                 key))
+            break

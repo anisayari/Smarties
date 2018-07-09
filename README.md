@@ -38,7 +38,7 @@ if __name__ == '__main__':
     #Run model training
     classifier,model,df = sm.ModelFromDatabase(df)
 
-    sentence_to_predict = "An individual's, nation's, or organization's carbon footprint can be measured by undertaking a GHG emissions assessment or other calculative activities denoted as carbon accounting. "
+    sentence_to_predict = "The French soccer team is perhaps one of the best team around the world."
 
     #Predict the class of our sample
     sm.Predict(classifier,model,df,sentence_to_predict)

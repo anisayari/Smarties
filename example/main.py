@@ -1,5 +1,4 @@
 import Smarties as sm
-import json
 
 wiki_dico_path = "wiki_dico.json"
 #TODO import and nltk and create function to adapat to each language
@@ -18,7 +17,7 @@ if __name__ == '__main__':
     #
     # df = sm.ImportDatabase(database_file = "database_file_custom_name.csv")
     #
-    # classifier,model,df = sm.ModelFromDatabase(df)
+    # classifier,df = sm.ModelFromDatabase(df)
     #
     # sentence_to_predict = "The French soccer team is perhaps one of the best team around the world."
-    # sm.Predict(classifier,model,df,sentence_to_predict)
+    # sm.Predict(classifier,df,sentence_to_predict)
