@@ -335,9 +335,13 @@ def Predict(clf, df_init, sentence, content_col='Content'):
     # print(clf.predict(X))
     print(clf.predict_proba(X))
     predicted = clf.predict(X)[0]
-    print(predicted)
     with open(mapping_file) as f_in:
         dict_mapping = json.load(f_in)
+    for key, value in dict_mapping.items():
+        print('[RESULTS] - Repartition')
+        print("I think to  {0} % that it is about: {1}%".format(key,round(float(clf.predict_proba(X)[0][value]) * 100, 1)))
+
+    print('--------------------------------------------')
     for key, value in dict_mapping.items():
         if predicted == value:
             print("I think to  {} % that it is about: {}".format(round(float(clf.predict_proba(X)[0][value]) * 100, 1),
