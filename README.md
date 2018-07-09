@@ -55,11 +55,16 @@ Please feel free to contribute ! Report any bugs in the issue section.
 
 - [ ] Complete Code documentation and README
 - [x] Build a basis code
+- [ ] Multi Langage identification and support
+- [ ] File format support
+- [ ] Text Granularity classification
 - [x] Text processing (Clean, tokenizing,...)
 - [x] Wikipedia auto-search by class
 - [x] Database creation from a json (Wikipedia learning, Datastructure, sampling..)
 - [x] Create text classification algorithm (RAKE, GridSearch, RFC, Doc2Vec)
 - [x] Input example and return classification
+- [ ] Multiple output classification by granularity
+
 
 ### LICENSE
 
