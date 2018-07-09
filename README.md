@@ -7,7 +7,7 @@ any documents/text. We use a Machine Learning and Doc2Vec algorithms.
 <p align="center">
   <img width="460" height="auto" src="https://media.giphy.com/media/69tPjFPhuRwELvMLpn/giphy.gif">
 </p>
-Did you see this scene in Avengers: Age of Ultron ? Our learnable programs work kind similar (without the vilain part, we hope... ):smile:
+Did you see this scene in Avengers: Age of Ultron ? Our learnable programs work kind similar (without the vilain part, we hope... :smile: ).
 Our Ai use the most advanced open knowledge base to learn for identifing new categories, and our solution can always learn new related topics. 
 
 ## Getting Started :beginner:
