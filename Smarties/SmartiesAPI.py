@@ -20,9 +20,12 @@ import random
 mapping_file = 'mapping.json'
 
 
-def TexttoKeywordDataframe(text, class_le,stoppath):
+def TexttoKeywordDataframe(text, class_labelized,stoppath,
+                           number_of_character_per_word_at_least,
+                           number_of_words_at_most_per_phrase,
+                           number_of_keywords_appears_in_the_text_at_least):
     # print('Keyword Extraction by NLTK, In Progress...')
-    rake_object = rake.Rake(stoppath, 5, 2, 5)
+    rake_object = rake.Rake(stoppath, number_of_character_per_word_at_least, number_of_words_at_most_per_phrase, number_of_keywords_appears_in_the_text_at_least)
     keywords = rake_object.run(text)
     if len(keywords) == 0:
         print(
@@ -33,10 +36,36 @@ def TexttoKeywordDataframe(text, class_le,stoppath):
     df = pd.DataFrame(keywords)
     df.pivot(columns=0, values=1)
     df.columns = ['KeyWord', "Score"]
-    df["Class_le"] = int(class_le)
+    df["class_labelized"] = int(class_labelized)
     df.Score = df.Score.round(2)
     # print(df)
     return df, keywords
+
+
+def get_df_keyword_from_content(df, content_col, class_col,stoppath,
+                                number_of_character_per_word_at_least,
+                           number_of_words_at_most_per_phrase,
+                           number_of_keywords_appears_in_the_text_at_least):
+    df_k = pd.DataFrame()
+    for text in df.groupby([class_col])[content_col]:
+        #run keyword extraction for all text concatened
+        class_labelized = text[0]
+        full_text = ''.join(text[1])
+        df, keywords = TexttoKeywordDataframe(full_text, class_labelized,stoppath,
+                                              number_of_character_per_word_at_least,
+                                              number_of_words_at_most_per_phrase,
+                                              number_of_keywords_appears_in_the_text_at_least
+                                              )
+        df_k = df_k.append(df)
+    # replace value labelized with mapped value from mapping file
+    json_file = open(mapping_file)
+    json_str = json_file.read()
+    mapping_dico = json.loads(json_str)
+    inv_map = {v: k for k, v in mapping_dico.items()}
+    df_k["class"] = df_k['class_labelized']
+    df_k.replace({"class": inv_map})
+    df_k.to_csv("keywords_database.csv".format(content_col), sep=";", index=False)
+    return df_k
 
 
 def sampling_class(df, class_col):
@@ -70,7 +99,7 @@ def AddEntryToJson(wiki_dico_path, theme, pageid=0, title=''):
     print("[INFO] {0} had been succesfully added to the knowledge base".format(title.replace('_', '')))
 
 
-def UpWikiDico(wiki_dico):
+def UpWikiDico(wiki_dico, max_article_links):
     print("[INFO] Start sort and sampling...")
     # Remove common content and sampling
     theme_list = list(wiki_dico.keys())
@@ -83,14 +112,13 @@ def UpWikiDico(wiki_dico):
                     list(wiki_dico[theme_list[j]].keys())
                 )
             )
-
-    n = 20
     #remove intersection + sampling
     for key, values in wiki_dico.items():
-        key_random = list(random.sample(list(values), n))
-        wiki_dico[key] = {k: v for k, v in values.items() if v not in intersection_list and k in key_random}
+        key_random = list(random.sample(list(values), max_article_links))
+        wiki_dico[key] = {k: v for k, v in values.items() if v not in intersection_list and k in key_random and k != key}
     print("[INFO] Sort and sampling done")
     return wiki_dico
+
 
 def GetGlobalPageIDWikiLinksList(links):
     wiki_dico__for_one_theme = {}
@@ -121,7 +149,7 @@ def GetPageID(title):
     return int(next(iter(data["pages"])))
 
 
-def ConstructWikiDico(wiki_dico_path, title_theme_list, init=False,find_links=False):
+def ConstructWikiDico(wiki_dico_path, title_theme_list, init=False,find_links=False,max_article_links=100):
     #check if wiki dico exist or created
     if not os.path.isfile(wiki_dico_path):
         with open(wiki_dico_path, 'w') as fp:
@@ -147,8 +175,9 @@ def ConstructWikiDico(wiki_dico_path, title_theme_list, init=False,find_links=Fa
                     print('[ERROR] Look like I found many related topic about that... select one and try again please:')
                     for word in e.options:
                         print(word)
-                page_primary = wikipedia.page(pageid=pageid)
-                links = page_primary.links
+                if find_links:
+                    page_primary = wikipedia.page(pageid=pageid)
+                    links = page_primary.links
                 dico_tmp = {key: 0 for key in links if key not in list(wiki_dico[theme])}
                 for key,value in dico_tmp.items():
                     if key in list(dico_tmp.keys()):
@@ -170,10 +199,12 @@ def ConstructWikiDico(wiki_dico_path, title_theme_list, init=False,find_links=Fa
                         title, theme))
                 pass
 
-    wiki_dico = UpWikiDico(wiki_dico)
-    for title, theme in title_theme_list:
-        print('\n[INFO] Getting Wikipedia links for {}'.format(theme))
-        wiki_dico[theme] = GetGlobalPageIDWikiLinksList(wiki_dico[theme])
+    wiki_dico = UpWikiDico(wiki_dico,max_article_links)
+
+    if find_links:
+        for title, theme in title_theme_list:
+            print('\n[INFO] Getting Wikipedia links for {}'.format(theme))
+            wiki_dico[theme] = GetGlobalPageIDWikiLinksList(wiki_dico[theme])
 
     if init:
         with open(wiki_dico_path, 'w') as fp:
@@ -183,7 +214,7 @@ def ConstructWikiDico(wiki_dico_path, title_theme_list, init=False,find_links=Fa
             for title, pageid in dico.items():
                 AddEntryToJson(wiki_dico_path, theme, pageid=pageid, title=title)
 
-    print('[INFO] Construct Knowledge base from Wikipedia DONE.')
+    print('\n[INFO] Construct Knowledge base from Wikipedia DONE.')
 
 
 def CleanWikiPage(content):
@@ -211,8 +242,8 @@ def ConstructDatabaseFromKnwoledgebase(wiki_dico_path, database_file_ouput):
             print('Getting page \r{}'.format(str(key2)))
             try:
                 page = CleanWikiPage(wikipedia.page(pageid=value2).content)
-            except AttributeError:
-                print('[ERROR] PageID do not valid for {0} with pageid: {1}'.format(key2,value2))
+            except AttributeError or wikipedia.exceptions.DisambiguationError:
+                print('[ERROR] PageID do not valid for {0} with pageid: {1} or Disambiguation Error'.format(key2,value2))
             # add new entry in database
             df_tmp = pd.DataFrame({"Content": page,
                                    "Class": key,
@@ -225,7 +256,7 @@ def ConstructDatabaseFromKnwoledgebase(wiki_dico_path, database_file_ouput):
     with open(mapping_file, 'w') as fp:
         json.dump(le_name_mapping, fp, default=default)
     print(le_name_mapping)
-    df_database["Class_le"] = df_database.Class.map(le_name_mapping)
+    df_database["class_labelized"] = df_database.Class.map(le_name_mapping)
     df_database.to_csv(database_file_ouput, header=True, index=False, sep=";")
 
 
@@ -271,42 +302,40 @@ def train_classifier(X, y):
     return clf
 
 
-def get_df_keyword_from_content(df, content_col, class_col,stoppath):
-    df_k = pd.DataFrame()
-    for text in df.groupby([class_col])[content_col]:
-        class_le = text[0]
-        full_text = ''.join(text[1])
-        df, keywords = TexttoKeywordDataframe(full_text, class_le,stoppath)
-        df_k = df_k.append(df)
-    df_k.to_csv("keywords_database.csv", sep=";", index=False)
-    return df_k
-
-
-def ImportDatabase(database_file, content_col="Content", class_col="Class_le",stoppath="Stoplist.txt", sampling=True, split=True, sort=True):
+def ImportDatabase(database_file, content_col="Content", class_col="class_labelized", sampling=False, split=True):
     print('[INFO] Import DATABASE')
     df = pd.read_csv(database_file, header=0, sep=";", encoding="utf-8")
     if split:
         df = split_content(df, content_col, class_col)
     if sampling:
         df = sampling_class(df, class_col)
-    if sort:
-        df_k = get_df_keyword_from_content(df, content_col, class_col,stoppath)
-        for keyword_list in df_k.groupby(class_col)['KeyWord']:
-            class_le = keyword_list[0]
-            keyword_list = keyword_list[1]
-            for index, row in df.iterrows():
-                find = False
-                if row[class_col] == class_le:
-                    for keyword in keyword_list:
-                        if keyword in row[content_col]:
-                            find = True
-                    if not find:
-                        df.drop(index, inplace=True)
     df.reset_index(inplace=True)
     return df
 
+def SortKeywordFromDatabase(df,number_of_character_per_word_at_least,
+                           number_of_words_at_most_per_phrase,
+                           number_of_keywords_appears_in_the_text_at_least,
+                            content_col="Content", class_col="class_labelized", stoppath="Stoplist.txt"):
 
-def ModelFromDatabase(df, content_col="Content", class_col="Class_le"):
+    df_k = get_df_keyword_from_content(df, content_col, class_col, stoppath,
+                                       number_of_character_per_word_at_least,
+                           number_of_words_at_most_per_phrase,
+                           number_of_keywords_appears_in_the_text_at_least)
+    for keyword_list in df_k.groupby(class_col)['KeyWord']:
+        class_labelized = keyword_list[0]
+        keyword_list = keyword_list[1]
+        for index, row in df.iterrows():
+            find = False
+            if row[class_col] == class_labelized:
+                for keyword in keyword_list:
+                    if keyword in row[content_col]:
+                        find = True
+                if not find:
+                    df.drop(index, inplace=True)
+    df.reset_index(inplace=True)
+    return df
+
+def ModelFromDatabase(df, content_col="Content", class_col="class_labelized"):
     # Sampling database
     # lmtzr = WordNetLemmatizer()
     w = re.compile("\w+", re.I)
