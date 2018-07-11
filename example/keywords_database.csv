@@ -1,0 +1,580 @@
+KeyWord;Score;class_labelized;class
+major league baseball;9.67;0;Baseball
+world baseball classic;9.62;0;Baseball
+league world series;9.35;0;Baseball
+boston red sox;9.32;0;Baseball
+chicago white sox;8.84;0;Baseball
+puerto rico;6.61;0;Baseball
+league baseball;6.36;0;Baseball
+national league;6.35;0;Baseball
+world series;6.18;0;Baseball
+south korea;5.81;0;Baseball
+major leagues;5.79;0;Baseball
+dominican republic;5.74;0;Baseball
+home run;5.33;0;Baseball
+home team;5.12;0;Baseball
+home runs;4.94;0;Baseball
+united states;4.86;0;Baseball
+home plate;4.76;0;Baseball
+softball;4.58;0;Baseball
+box score;4.55;0;Baseball
+plate appearance;4.37;0;Baseball
+extra innings;4.17;0;Baseball
+batting order;3.94;0;Baseball
+knuckleball pitchers;3.81;0;Baseball
+world;3.48;0;Baseball
+baseball;3.19;0;Baseball
+league;3.17;0;Baseball
+girls;2.89;0;Baseball
+rules;2.74;0;Baseball
+series;2.69;0;Baseball
+division;2.59;0;Baseball
+sports;2.56;0;Baseball
+leagues;2.48;0;Baseball
+playing;2.42;0;Baseball
+manager;2.35;0;Baseball
+tournament;2.33;0;Baseball
+pitching;2.3;0;Baseball
+stadium;2.3;0;Baseball
+hitter;2.23;0;Baseball
+israel;2.22;0;Baseball
+winning;2.22;0;Baseball
+plate;2.21;0;Baseball
+popular;2.19;0;Baseball
+single;2.16;0;Baseball
+bouton;2.14;0;Baseball
+players;2.08;0;Baseball
+pitchers;2.08;0;Baseball
+catcher;2.05;0;Baseball
+history;2.05;0;Baseball
+including;2.02;0;Baseball
+record;2.0;0;Baseball
+formed;2.0;0;Baseball
+teams;2.0;0;Baseball
+books;2.0;0;Baseball
+played;1.98;0;Baseball
+pitcher;1.95;0;Baseball
+score;1.93;0;Baseball
+season;1.93;0;Baseball
+round;1.92;0;Baseball
+field;1.9;0;Baseball
+introduced;1.87;0;Baseball
+games;1.83;0;Baseball
+double;1.83;0;Baseball
+angels;1.81;0;Baseball
+player;1.8;0;Baseball
+europe;1.79;0;Baseball
+cricket;1.79;0;Baseball
+roster;1.79;0;Baseball
+inning;1.78;0;Baseball
+taiwan;1.78;0;Baseball
+stars;1.77;0;Baseball
+balls;1.75;0;Baseball
+throws;1.75;0;Baseball
+batters;1.74;0;Baseball
+australia;1.74;0;Baseball
+knuckleball;1.73;0;Baseball
+winner;1.72;0;Baseball
+thrown;1.71;0;Baseball
+called;1.71;0;Baseball
+runners;1.7;0;Baseball
+japan;1.68;0;Baseball
+pitches;1.67;0;Baseball
+countries;1.66;0;Baseball
+hitting;1.65;0;Baseball
+strike;1.64;0;Baseball
+number;1.63;0;Baseball
+order;1.63;0;Baseball
+innings;1.63;0;Baseball
+sport;1.62;0;Baseball
+times;1.59;0;Baseball
+recorded;1.59;0;Baseball
+pitch;1.57;0;Baseball
+caught;1.56;0;Baseball
+mexico;1.56;0;Baseball
+bases;1.53;0;Baseball
+baseman;1.5;0;Baseball
+fielder;1.45;0;Baseball
+bench;1.44;0;Baseball
+throw;1.44;0;Baseball
+years;1.42;0;Baseball
+signed;1.42;0;Baseball
+triple;1.41;0;Baseball
+runner;1.4;0;Baseball
+considered;1.4;0;Baseball
+established;1.4;0;Baseball
+nation;1.39;0;Baseball
+advance;1.38;0;Baseball
+listed;1.37;0;Baseball
+reference;1.36;0;Baseball
+place;1.36;0;Baseball
+title;1.35;0;Baseball
+country;1.35;0;Baseball
+throwing;1.29;0;Baseball
+result;1.29;0;Baseball
+pennsylvania;1.27;0;Baseball
+canada;1.27;0;Baseball
+batter;1.26;0;Baseball
+children;1.23;0;Baseball
+bottom;1.22;0;Baseball
+addition;1.21;0;Baseball
+netherlands;1.2;0;Baseball
+participate;1.19;0;Baseball
+attempt;1.15;0;Baseball
+spain;1.09;0;Baseball
+leave;1.08;0;Baseball
+founded;1.05;0;Baseball
+credited;1.0;0;Baseball
+puerto rico;6.35;1;Basketball
+united states;5.35;1;Basketball
+rhode island;5.0;1;Basketball
+olympic games;4.97;1;Basketball
+social model;4.95;1;Basketball
+disabled people;4.95;1;Basketball
+medical model;4.68;1;Basketball
+roberto brunamonti;4.38;1;Basketball
+carlo recalcati;4.25;1;Basketball
+finished 5th;4.13;1;Basketball
+home games;4.06;1;Basketball
+12 teamsdino meneghin;4.0;1;Basketball
+sandro gamba;4.0;1;Basketball
+giancarlo primo;3.94;1;Basketball
+pierluigi marzorati;3.87;1;Basketball
+renato villalta;3.83;1;Basketball
+school;3.29;1;Basketball
+basketball;3.03;1;Basketball
+sports;2.68;1;Basketball
+states;2.56;1;Basketball
+tournament;2.52;1;Basketball
+world;2.5;1;Basketball
+college;2.43;1;Basketball
+league;2.42;1;Basketball
+state;2.4;1;Basketball
+hamline;2.37;1;Basketball
+people;2.27;1;Basketball
+clubs;2.27;1;Basketball
+baseball;2.27;1;Basketball
+boston;2.26;1;Basketball
+finals;2.21;1;Basketball
+including;2.2;1;Basketball
+rules;2.18;1;Basketball
+teams;2.17;1;Basketball
+playing;2.16;1;Basketball
+named;2.14;1;Basketball
+athens;2.13;1;Basketball
+students;2.1;1;Basketball
+included;2.09;1;Basketball
+point;2.09;1;Basketball
+summer;2.09;1;Basketball
+jordan;2.07;1;Basketball
+based;2.07;1;Basketball
+final;2.07;1;Basketball
+university;2.07;1;Basketball
+games;2.06;1;Basketball
+sport;2.03;1;Basketball
+competition;2.0;1;Basketball
+history;2.0;1;Basketball
+population;1.96;1;Basketball
+players;1.95;1;Basketball
+record;1.95;1;Basketball
+bulls;1.94;1;Basketball
+education;1.93;1;Basketball
+connecticut;1.89;1;Basketball
+italy;1.89;1;Basketball
+maine;1.88;1;Basketball
+place;1.86;1;Basketball
+times;1.86;1;Basketball
+player;1.8;1;Basketball
+points;1.78;1;Basketball
+english;1.76;1;Basketball
+season;1.76;1;Basketball
+tournaments;1.76;1;Basketball
+england;1.75;1;Basketball
+massachusetts;1.75;1;Basketball
+olympics;1.74;1;Basketball
+called;1.74;1;Basketball
+court;1.73;1;Basketball
+disability;1.71;1;Basketball
+women;1.69;1;Basketball
+shooting;1.69;1;Basketball
+played;1.69;1;Basketball
+society;1.69;1;Basketball
+individuals;1.67;1;Basketball
+member;1.64;1;Basketball
+making;1.63;1;Basketball
+created;1.6;1;Basketball
+score;1.6;1;Basketball
+defense;1.58;1;Basketball
+round;1.57;1;Basketball
+individual;1.56;1;Basketball
+coach;1.56;1;Basketball
+dribble;1.53;1;Basketball
+series;1.53;1;Basketball
+event;1.5;1;Basketball
+basket;1.44;1;Basketball
+vermont;1.44;1;Basketball
+playoffs;1.44;1;Basketball
+founded;1.42;1;Basketball
+country;1.42;1;Basketball
+hampshire;1.41;1;Basketball
+region;1.41;1;Basketball
+years;1.4;1;Basketball
+number;1.39;1;Basketball
+considered;1.39;1;Basketball
+seasons;1.37;1;Basketball
+disabilities;1.36;1;Basketball
+person;1.29;1;Basketball
+return;1.27;1;Basketball
+addition;1.26;1;Basketball
+qualify;1.25;1;Basketball
+participate;1.23;1;Basketball
+start;1.23;1;Basketball
+completed;1.2;1;Basketball
+nello;1.17;1;Basketball
+paratore;1.17;1;Basketball
+greece;1.15;1;Basketball
+present;1.09;1;Basketball
+awarded;1.09;1;Basketball
+losing;1.08;1;Basketball
+backboard;1.08;1;Basketball
+result;1.08;1;Basketball
+carmine;1.0;1;Basketball
+st andrews;6.75;2;Golf
+pga tour;6.58;2;Golf
+pga championship;6.19;2;Golf
+open championship;5.76;2;Golf
+golf courses;5.63;2;Golf
+major championships;5.32;2;Golf
+united states;5.27;2;Golf
+previous year;4.21;2;Golf
+association;2.88;2;Golf
+including;2.6;2;Golf
+major;2.56;2;Golf
+world;2.44;2;Golf
+called;2.44;2;Golf
+development;2.43;2;Golf
+winner;2.41;2;Golf
+largest;2.39;2;Golf
+balls;2.28;2;Golf
+hainan;2.27;2;Golf
+total;2.21;2;Golf
+stroke;2.15;2;Golf
+courses;2.12;2;Golf
+field;2.06;2;Golf
+europe;2.05;2;Golf
+players;2.05;2;Golf
+population;2.05;2;Golf
+making;2.0;2;Golf
+distance;2.0;2;Golf
+playing;2.0;2;Golf
+formed;2.0;2;Golf
+tournaments;2.0;2;Golf
+country;1.94;2;Golf
+china;1.93;2;Golf
+ireland;1.92;2;Golf
+masters;1.92;2;Golf
+golfers;1.92;2;Golf
+people;1.91;2;Golf
+water;1.91;2;Golf
+members;1.91;2;Golf
+score;1.89;2;Golf
+tournament;1.89;2;Golf
+event;1.88;2;Golf
+found;1.88;2;Golf
+germany;1.87;2;Golf
+island;1.87;2;Golf
+winning;1.87;2;Golf
+record;1.85;2;Golf
+america;1.83;2;Golf
+province;1.82;2;Golf
+green;1.82;2;Golf
+based;1.82;2;Golf
+surface;1.81;2;Golf
+round;1.81;2;Golf
+generally;1.77;2;Golf
+place;1.77;2;Golf
+state;1.76;2;Golf
+golfer;1.74;2;Golf
+india;1.73;2;Golf
+clubs;1.72;2;Golf
+start;1.69;2;Golf
+years;1.69;2;Golf
+caddie;1.68;2;Golf
+hosted;1.67;2;Golf
+established;1.65;2;Golf
+points;1.63;2;Golf
+order;1.61;2;Golf
+player;1.6;2;Golf
+beginning;1.58;2;Golf
+countries;1.57;2;Golf
+france;1.56;2;Golf
+point;1.55;2;Golf
+allowed;1.53;2;Golf
+women;1.53;2;Golf
+18 holes;1.52;2;Golf
+holes;1.52;2;Golf
+earth;1.51;2;Golf
+covered;1.5;2;Golf
+rules;1.48;2;Golf
+number;1.47;2;Golf
+republic;1.47;2;Golf
+season;1.42;2;Golf
+majors;1.42;2;Golf
+increase;1.42;2;Golf
+scotland;1.38;2;Golf
+ground;1.38;2;Golf
+majority;1.36;2;Golf
+located;1.35;2;Golf
+played;1.34;2;Golf
+rounds;1.33;2;Golf
+divided;1.31;2;Golf
+atmosphere;1.21;2;Golf
+strokes;1.12;2;Golf
+result;1.08;2;Golf
+subject;1.08;2;Golf
+black belt;6.75;3;Judo
+martial arts;6.25;3;Judo
+pencak silat;5.76;3;Judo
+olympic program;5.58;3;Judo
+olympic games;5.49;3;Judo
+kodokan judo;4.95;3;Judo
+vovinam;3.24;3;Judo
+called;2.83;3;Judo
+silat;2.76;3;Judo
+knife;2.7;3;Judo
+school;2.63;3;Judo
+iaido;2.57;3;Judo
+technique;2.5;3;Judo
+system;2.46;3;Judo
+influenced;2.45;3;Judo
+combat;2.45;3;Judo
+chinese;2.43;3;Judo
+world;2.36;3;Judo
+weapons;2.34;3;Judo
+samurai;2.31;3;Judo
+techniques;2.27;3;Judo
+sports;2.24;3;Judo
+schools;2.18;3;Judo
+common;2.17;3;Judo
+action;2.17;3;Judo
+meaning;2.17;3;Judo
+including;2.16;3;Judo
+guard;2.09;3;Judo
+training;2.08;3;Judo
+strikes;2.07;3;Judo
+period;2.06;3;Judo
+words;2.05;3;Judo
+created;2.04;3;Judo
+based;2.03;3;Judo
+japan;2.02;3;Judo
+english;2.0;3;Judo
+attacks;2.0;3;Judo
+power;2.0;3;Judo
+position;1.98;3;Judo
+tokyo;1.95;3;Judo
+character;1.94;3;Judo
+styles;1.92;3;Judo
+striking;1.92;3;Judo
+events;1.92;3;Judo
+sport;1.91;3;Judo
+philosophy;1.9;3;Judo
+forms;1.9;3;Judo
+kodokan;1.88;3;Judo
+included;1.88;3;Judo
+taoism;1.88;3;Judo
+sword;1.86;3;Judo
+practice;1.83;3;Judo
+kimono;1.83;3;Judo
+student;1.81;3;Judo
+state;1.8;3;Judo
+taught;1.79;3;Judo
+shuriken;1.79;3;Judo
+religion;1.79;3;Judo
+development;1.78;3;Judo
+confucianism;1.77;3;Judo
+strike;1.77;3;Judo
+force;1.76;3;Judo
+place;1.75;3;Judo
+person;1.75;3;Judo
+defense;1.74;3;Judo
+awarded;1.72;3;Judo
+discipline;1.72;3;Judo
+founded;1.7;3;Judo
+considered;1.68;3;Judo
+principle;1.68;3;Judo
+china;1.67;3;Judo
+throw;1.67;3;Judo
+practitioner;1.67;3;Judo
+disciplines;1.66;3;Judo
+people;1.64;3;Judo
+practiced;1.63;3;Judo
+translated;1.63;3;Judo
+added;1.62;3;Judo
+confucius;1.6;3;Judo
+teach;1.56;3;Judo
+developed;1.52;3;Judo
+similar;1.5;3;Judo
+nature;1.48;3;Judo
+randori;1.47;3;Judo
+thrown;1.46;3;Judo
+women;1.46;3;Judo
+thought;1.46;3;Judo
+attack;1.45;3;Judo
+referred;1.43;3;Judo
+jujutsu;1.43;3;Judo
+literally;1.4;3;Judo
+order;1.4;3;Judo
+means;1.39;3;Judo
+universe;1.39;3;Judo
+master;1.35;3;Judo
+established;1.33;3;Judo
+terms;1.29;3;Judo
+things;1.29;3;Judo
+making;1.27;3;Judo
+number;1.27;3;Judo
+indonesia;1.27;3;Judo
+types;1.25;3;Judo
+principles;1.24;3;Judo
+heaven;1.23;3;Judo
+ruler;1.18;3;Judo
+ability;1.18;3;Judo
+addition;1.15;3;Judo
+family;1.15;3;Judo
+hands;1.14;3;Judo
+emphasis;1.14;3;Judo
+creation;1.09;3;Judo
+opponent;1.07;3;Judo
+30 centimetres;1.04;3;Judo
+result;1.0;3;Judo
+refer;1.0;3;Judo
+gatame;1.0;3;Judo
+copa del rey;10.63;4;Soccer
+association football;6.6;4;Soccer
+la liga;6.38;4;Soccer
+national team;6.02;4;Soccer
+football league;6.01;4;Soccer
+zürich;5.98;4;Soccer
+world cup;5.81;4;Soccer
+real madrid;5.69;4;Soccer
+premier league;5.65;4;Soccer
+united states;5.4;4;Soccer
+city centre;5.17;4;Soccer
+scottish footballer;5.17;4;Soccer
+bicycle kick;5.15;4;Soccer
+english footballer;5.01;4;Soccer
+extra time;5.01;4;Soccer
+united kingdom;4.94;4;Soccer
+river clyde;4.23;4;Soccer
+football;3.14;4;Soccer
+north;3.13;4;Soccer
+german;2.88;4;Soccer
+league;2.87;4;Soccer
+school;2.86;4;Soccer
+championship;2.81;4;Soccer
+world;2.67;4;Soccer
+english;2.66;4;Soccer
+harrow;2.62;4;Soccer
+argentina;2.45;4;Soccer
+goalkeepers;2.44;4;Soccer
+rules;2.39;4;Soccer
+coach;2.38;4;Soccer
+glasgow;2.35;4;Soccer
+including;2.35;4;Soccer
+games;2.31;4;Soccer
+spanish;2.3;4;Soccer
+members;2.29;4;Soccer
+received;2.27;4;Soccer
+final;2.23;4;Soccer
+museum;2.2;4;Soccer
+scored;2.14;4;Soccer
+uruguay;2.14;4;Soccer
+stadium;2.13;4;Soccer
+barcelona;2.12;4;Soccer
+award;2.1;4;Soccer
+group;2.09;4;Soccer
+competition;2.06;4;Soccer
+spain;2.06;4;Soccer
+match;2.05;4;Soccer
+record;2.03;4;Soccer
+church;2.03;4;Soccer
+called;2.03;4;Soccer
+based;2.0;4;Soccer
+population;2.0;4;Soccer
+event;2.0;4;Soccer
+clubs;1.99;4;Soccer
+teams;1.99;4;Soccer
+tournament;1.97;4;Soccer
+competitions;1.97;4;Soccer
+hosted;1.96;4;Soccer
+player;1.96;4;Soccer
+goals;1.95;4;Soccer
+brazil;1.94;4;Soccer
+japan;1.93;4;Soccer
+yugoslavia;1.92;4;Soccer
+place;1.91;4;Soccer
+history;1.91;4;Soccer
+players;1.89;4;Soccer
+sport;1.89;4;Soccer
+winning;1.89;4;Soccer
+denmark;1.88;4;Soccer
+finals;1.84;4;Soccer
+decided;1.83;4;Soccer
+played;1.83;4;Soccer
+manager;1.83;4;Soccer
+construction;1.81;4;Soccer
+goalkeeper;1.8;4;Soccer
+winner;1.8;4;Soccer
+period;1.79;4;Soccer
+scotland;1.78;4;Soccer
+people;1.78;4;Soccer
+division;1.76;4;Soccer
+formed;1.75;4;Soccer
+promoted;1.73;4;Soccer
+order;1.73;4;Soccer
+liverpool;1.72;4;Soccer
+considered;1.69;4;Soccer
+built;1.68;4;Soccer
+england;1.67;4;Soccer
+divisions;1.67;4;Soccer
+position;1.67;4;Soccer
+france;1.64;4;Soccer
+score;1.58;4;Soccer
+referee;1.58;4;Soccer
+making;1.57;4;Soccer
+change;1.56;4;Soccer
+years;1.55;4;Soccer
+round;1.55;4;Soccer
+pitch;1.53;4;Soccer
+country;1.53;4;Soccer
+women;1.52;4;Soccer
+introduced;1.5;4;Soccer
+support;1.5;4;Soccer
+europe;1.47;4;Soccer
+located;1.45;4;Soccer
+switzerland;1.45;4;Soccer
+founded;1.44;4;Soccer
+field;1.43;4;Soccer
+london;1.43;4;Soccer
+ground;1.43;4;Soccer
+number;1.41;4;Soccer
+chile;1.4;4;Soccer
+awarded;1.38;4;Soccer
+named;1.38;4;Soccer
+established;1.36;4;Soccer
+result;1.33;4;Soccer
+quarter;1.29;4;Soccer
+majority;1.29;4;Soccer
+addition;1.28;4;Soccer
+added;1.27;4;Soccer
+season;1.27;4;Soccer
+formation;1.25;4;Soccer
+hands;1.23;4;Soccer
+headquarters;1.23;4;Soccer
+represented;1.18;4;Soccer
+designed;1.17;4;Soccer
+qualify;1.15;4;Soccer
+keeper;1.12;4;Soccer
+elected;1.08;4;Soccer
+handle;1.08;4;Soccer
+sweden;1.0;4;Soccer
+decide;1.0;4;Soccer

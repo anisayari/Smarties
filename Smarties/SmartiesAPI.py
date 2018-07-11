@@ -63,7 +63,7 @@ def get_df_keyword_from_content(df, content_col, class_col,stoppath,
     mapping_dico = json.loads(json_str)
     inv_map = {v: k for k, v in mapping_dico.items()}
     df_k["class"] = df_k['class_labelized']
-    df_k.replace({"class": inv_map})
+    df_k['class'].replace(inv_map,inplace=True)
     df_k.to_csv("keywords_database.csv".format(content_col), sep=";", index=False)
     return df_k
 
@@ -99,7 +99,7 @@ def AddEntryToJson(wiki_dico_path, theme, pageid=0, title=''):
     print("[INFO] {0} had been succesfully added to the knowledge base".format(title.replace('_', '')))
 
 
-def UpWikiDico(wiki_dico, max_article_links):
+def UpWikiDico(wiki_dico, max_article_links=None):
     print("[INFO] Start sort and sampling...")
     # Remove common content and sampling
     theme_list = list(wiki_dico.keys())
@@ -112,10 +112,24 @@ def UpWikiDico(wiki_dico, max_article_links):
                     list(wiki_dico[theme_list[j]].keys())
                 )
             )
-    #remove intersection + sampling
+    #remove intersection + random tirage
     for key, values in wiki_dico.items():
-        key_random = list(random.sample(list(values), max_article_links))
-        wiki_dico[key] = {k: v for k, v in values.items() if v not in intersection_list and k in key_random and k != key}
+        list_of_key_without_current_key = list(wiki_dico.keys())
+        list_of_key_without_current_key.remove(key)
+        if max_article_links != None:
+            key_random = list(random.sample(list(set(values)-set(intersection_list)), max_article_links))
+
+            wiki_dico[key] = {k: v for k, v in values.items() if (
+                        k not in intersection_list and k in key_random and k not in list_of_key_without_current_key) or (
+                                          k == key)}
+        else:
+            wiki_dico[key] = {k: v for k, v in values.items() if (
+                        k not in intersection_list and k not in list_of_key_without_current_key) or (
+                                          k == key)}
+
+        #if a title of a class links is not in a list of links of an other class
+        #and title is one of the sampling obtained and title
+
     print("[INFO] Sort and sampling done")
     return wiki_dico
 
@@ -242,7 +256,7 @@ def ConstructDatabaseFromKnwoledgebase(wiki_dico_path, database_file_ouput):
             print('Getting page \r{}'.format(str(key2)))
             try:
                 page = CleanWikiPage(wikipedia.page(pageid=value2).content)
-            except AttributeError or wikipedia.exceptions.DisambiguationError:
+            except:
                 print('[ERROR] PageID do not valid for {0} with pageid: {1} or Disambiguation Error'.format(key2,value2))
             # add new entry in database
             df_tmp = pd.DataFrame({"Content": page,
@@ -292,31 +306,32 @@ def vectorize_comments(df, d2v_model, df_init, action='Train'):
 
 
 def train_classifier(X, y):
-    n_estimators = [100, 400]
-    min_samples_split = [2]
-    min_samples_leaf = [1]
+    n_estimators = [50,100,200]
+    min_samples_split = [2,5,7]
+    min_samples_leaf = [1,2,3]
     parameters = {'n_estimators': n_estimators, 'min_samples_leaf': min_samples_leaf,
                   'min_samples_split': min_samples_split}
-    clf = GridSearchCV(RFC(verbose=1, n_jobs=4), cv=2, param_grid=parameters)
+    clf = GridSearchCV(RFC(verbose=1, n_jobs=-1), cv=None, param_grid=parameters,verbose=1)
     clf.fit(X, y)
     return clf
 
 
 def ImportDatabase(database_file, content_col="Content", class_col="class_labelized", sampling=False, split=True):
-    print('[INFO] Import DATABASE')
+    print('[INFO] Import DATABASE...')
     df = pd.read_csv(database_file, header=0, sep=";", encoding="utf-8")
     if split:
         df = split_content(df, content_col, class_col)
     if sampling:
         df = sampling_class(df, class_col)
     df.reset_index(inplace=True)
+    print('[INFO] Import DATABASE DONE')
     return df
 
 def SortKeywordFromDatabase(df,number_of_character_per_word_at_least,
                            number_of_words_at_most_per_phrase,
                            number_of_keywords_appears_in_the_text_at_least,
                             content_col="Content", class_col="class_labelized", stoppath="Stoplist.txt"):
-
+    print('[INFO] Sort Keyword From Database...')
     df_k = get_df_keyword_from_content(df, content_col, class_col, stoppath,
                                        number_of_character_per_word_at_least,
                            number_of_words_at_most_per_phrase,
@@ -333,6 +348,7 @@ def SortKeywordFromDatabase(df,number_of_character_per_word_at_least,
                 if not find:
                     df.drop(index, inplace=True)
     df.reset_index(inplace=True)
+    print('[INFO] Sort Keyword From Database DONE')
     return df
 
 def ModelFromDatabase(df, content_col="Content", class_col="class_labelized"):
@@ -355,7 +371,7 @@ def Predict(clf, df_init, sentence, content_col='Content'):
     df = pd.DataFrame(data)
     w = re.compile("\w+", re.I)
     df = df_init.append(df)
-    df.reset_index(inplace=True)
+    df.reset_index(drop=True,inplace=True)
     sen = label_sentences(df, content_columns=content_col, w=w)
     model = train_doc2vec_model(sen)
     df = vectorize_comments(df, model, df, action='Train')
@@ -368,7 +384,7 @@ def Predict(clf, df_init, sentence, content_col='Content'):
         dict_mapping = json.load(f_in)
     for key, value in dict_mapping.items():
         print('[RESULTS] - Repartition')
-        print("I think to  {0} % that it is about: {1}%".format(key,round(float(clf.predict_proba(X)[0][value]) * 100, 1)))
+        print("I think to  {0} %  : {1}%".format(key,round(float(clf.predict_proba(X)[0][value]) * 100, 1)))
 
     print('--------------------------------------------')
     for key, value in dict_mapping.items():
