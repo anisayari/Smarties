@@ -52,6 +52,21 @@ if __name__ == '__main__':
     sentence_to_predict = "The French soccer team is perhaps one of the best team around the world."
     sm.predict(classifier, df, sentence_to_predict)
 ```
+Language Supported :
+- arabic
+- danish
+- german
+- english
+- spanish
+- french
+- indonesian
+- italian
+- japanese
+- dutch
+- portuguese
+- brasilian
+- romanian
+- russian
 
 ### TODO :grin:
 Please feel free to contribute ! Report any bugs in the issue section. 

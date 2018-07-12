@@ -3,3 +3,8 @@
 dist/*
 Smarties.egg-info/*
 Smarties/__pycache__/
+*.dat
+*.bz2
+*.caffemodel
+*.txt
+*.cpkt.*

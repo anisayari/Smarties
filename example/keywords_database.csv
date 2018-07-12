@@ -1,481 +1,671 @@
 KeyWord;Score;class_labelized;class
-sea level rise;8.15;0;environmental disaster
-world health organization;7.76;0;environmental disaster
-emergency management;6.44;0;environmental disaster
-united nations;6.06;0;environmental disaster
-nuclear weapons;6.03;0;environmental disaster
-national institute;5.99;0;environmental disaster
-carbon dioxide;5.96;0;environmental disaster
-oil spill;5.94;0;environmental disaster
-disaster management;5.87;0;environmental disaster
-soviet union;5.75;0;environmental disaster
-united states;5.63;0;environmental disaster
-climate system;5.59;0;environmental disaster
-environmental damage;5.52;0;environmental disaster
-global warming;5.42;0;environmental disaster
-climate change;5.31;0;environmental disaster
-human health;5.23;0;environmental disaster
-high levels;5.17;0;environmental disaster
-control rods;5.12;0;environmental disaster
-thyroid cancer;5.12;0;environmental disaster
-natural disaster;5.12;0;environmental disaster
-cold war;5.09;0;environmental disaster
-check digit;5.08;0;environmental disaster
-food chain;5.01;0;environmental disaster
-fukushima prefecture;5.0;0;environmental disaster
-greenhouse gases;4.95;0;environmental disaster
-radioactive materials;4.91;0;environmental disaster
-radiation levels;4.84;0;environmental disaster
-radioactive material;4.84;0;environmental disaster
-radioactive contamination;4.84;0;environmental disaster
-biodiversity loss;4.8;0;environmental disaster
-radiation exposure;4.75;0;environmental disaster
-japanese ministry;4.75;0;environmental disaster
-developing countries;4.73;0;environmental disaster
-radioactive cesium;4.72;0;environmental disaster
-natural disasters;4.65;0;environmental disaster
-natural environment;4.59;0;environmental disaster
-radioactive caesium;4.44;0;environmental disaster
-chernobyl accident;4.32;0;environmental disaster
-developed countries;4.28;0;environmental disaster
-north america;4.2;0;environmental disaster
-large amount;3.96;0;environmental disaster
-power;3.35;0;environmental disaster
-nuclear;3.34;0;environmental disaster
-management;3.31;0;environmental disaster
-pollution;3.17;0;environmental disaster
-include;3.13;0;environmental disaster
-emergency;3.13;0;environmental disaster
-emergencies;3.12;0;environmental disaster
-fishing;2.95;0;environmental disaster
-court;2.91;0;environmental disaster
-protection;2.9;0;environmental disaster
-emissions;2.88;0;environmental disaster
-system;2.85;0;environmental disaster
-impact;2.8;0;environmental disaster
-health;2.78;0;environmental disaster
-public;2.77;0;environmental disaster
-included;2.77;0;environmental disaster
-climate;2.74;0;environmental disaster
-waste;2.74;0;environmental disaster
-safety;2.72;0;environmental disaster
-industry;2.72;0;environmental disaster
-forest;2.71;0;environmental disaster
-average;2.71;0;environmental disaster
-farming;2.7;0;environmental disaster
-spill;2.7;0;environmental disaster
-fukushima;2.7;0;environmental disaster
-development;2.69;0;environmental disaster
-weapons;2.69;0;environmental disaster
-quality;2.69;0;environmental disaster
-scale;2.67;0;environmental disaster
-research;2.66;0;environmental disaster
-production;2.63;0;environmental disaster
-received;2.61;0;environmental disaster
-states;2.61;0;environmental disaster
-energy;2.6;0;environmental disaster
-limited;2.6;0;environmental disaster
-weather;2.6;0;environmental disaster
-recovery;2.59;0;environmental disaster
-change;2.57;0;environmental disaster
-chemical;2.57;0;environmental disaster
-justice;2.57;0;environmental disaster
-small;2.56;0;environmental disaster
-natural;2.56;0;environmental disaster
-disaster;2.56;0;environmental disaster
-prestige;2.55;0;environmental disaster
-group;2.54;0;environmental disaster
-mitigation;2.54;0;environmental disaster
-significant;2.53;0;environmental disaster
-issues;2.53;0;environmental disaster
-source;2.53;0;environmental disaster
-reduction;2.51;0;environmental disaster
-radiation;2.51;0;environmental disaster
-reduced;2.49;0;environmental disaster
-contaminated;2.48;0;environmental disaster
-control;2.48;0;environmental disaster
-erosion;2.47;0;environmental disaster
-uranium;2.47;0;environmental disaster
-information;2.47;0;environmental disaster
-costs;2.46;0;environmental disaster
-policy;2.46;0;environmental disaster
-chernobyl;2.45;0;environmental disaster
-human;2.45;0;environmental disaster
-efforts;2.44;0;environmental disaster
-affect;2.44;0;environmental disaster
-causing;2.44;0;environmental disaster
-population;2.44;0;environmental disaster
-created;2.44;0;environmental disaster
-groundwater;2.43;0;environmental disaster
-event;2.43;0;environmental disaster
-potential;2.43;0;environmental disaster
-hanford;2.42;0;environmental disaster
-temperature;2.42;0;environmental disaster
-tanks;2.41;0;environmental disaster
-cancer;2.41;0;environmental disaster
-large;2.41;0;environmental disaster
-including;2.4;0;environmental disaster
-company;2.39;0;environmental disaster
-support;2.38;0;environmental disaster
-response;2.38;0;environmental disaster
-warming;2.38;0;environmental disaster
-science;2.37;0;environmental disaster
-resources;2.37;0;environmental disaster
-south;2.36;0;environmental disaster
-future;2.35;0;environmental disaster
-started;2.35;0;environmental disaster
-report;2.35;0;environmental disaster
-plant;2.35;0;environmental disaster
-claims;2.35;0;environmental disaster
-pressure;2.35;0;environmental disaster
-stated;2.34;0;environmental disaster
-lower;2.34;0;environmental disaster
-levels;2.33;0;environmental disaster
-impacts;2.32;0;environmental disaster
-increasing;2.32;0;environmental disaster
-noted;2.32;0;environmental disaster
-related;2.32;0;environmental disaster
-damage;2.31;0;environmental disaster
-ocean;2.31;0;environmental disaster
-plants;2.3;0;environmental disaster
-preparedness;2.3;0;environmental disaster
-events;2.3;0;environmental disaster
-burning;2.29;0;environmental disaster
-measurements;2.29;0;environmental disaster
-similar;2.29;0;environmental disaster
-increased;2.29;0;environmental disaster
-process;2.28;0;environmental disaster
-tepco;2.28;0;environmental disaster
-total;2.28;0;environmental disaster
-level;2.28;0;environmental disaster
-developed;2.28;0;environmental disaster
-provide;2.28;0;environmental disaster
-department;2.27;0;environmental disaster
-technology;2.27;0;environmental disaster
-estimates;2.26;0;environmental disaster
-forests;2.26;0;environmental disaster
-bhopal;2.26;0;environmental disaster
-island;2.26;0;environmental disaster
-published;2.26;0;environmental disaster
-higher;2.26;0;environmental disaster
-government;2.26;0;environmental disaster
-exposure;2.24;0;environmental disaster
-released;2.24;0;environmental disaster
-livestock;2.24;0;environmental disaster
-bottom;2.24;0;environmental disaster
-growth;2.23;0;environmental disaster
-affected;2.22;0;environmental disaster
-sources;2.22;0;environmental disaster
-university;2.22;0;environmental disaster
-contamination;2.2;0;environmental disaster
-conducted;2.2;0;environmental disaster
-physical;2.2;0;environmental disaster
-material;2.2;0;environmental disaster
-cover;2.2;0;environmental disaster
-state;2.2;0;environmental disaster
-center;2.19;0;environmental disaster
-decontamination;2.19;0;environmental disaster
-scientists;2.19;0;environmental disaster
-crops;2.18;0;environmental disaster
-designed;2.17;0;environmental disaster
-called;2.17;0;environmental disaster
-problem;2.16;0;environmental disaster
-conditions;2.16;0;environmental disaster
-animal;2.16;0;environmental disaster
-working;2.16;0;environmental disaster
-based;2.16;0;environmental disaster
-trade;2.15;0;environmental disaster
-concern;2.15;0;environmental disaster
-investigation;2.15;0;environmental disaster
-water;2.15;0;environmental disaster
-north;2.14;0;environmental disaster
-caused;2.14;0;environmental disaster
-building;2.13;0;environmental disaster
-risks;2.13;0;environmental disaster
-asked;2.12;0;environmental disaster
-workers;2.12;0;environmental disaster
-effects;2.12;0;environmental disaster
-deforestation;2.11;0;environmental disaster
-planned;2.11;0;environmental disaster
-point;2.11;0;environmental disaster
-access;2.11;0;environmental disaster
-victims;2.11;0;environmental disaster
-river;2.11;0;environmental disaster
-species;2.1;0;environmental disaster
-reduce;2.1;0;environmental disaster
-world;2.1;0;environmental disaster
-produced;2.09;0;environmental disaster
-consumption;2.09;0;environmental disaster
-leaking;2.09;0;environmental disaster
-hazard;2.09;0;environmental disaster
-original;2.09;0;environmental disaster
-common;2.09;0;environmental disaster
-disasters;2.08;0;environmental disaster
-cesium;2.08;0;environmental disaster
-collected;2.08;0;environmental disaster
-reported;2.08;0;environmental disaster
-prevention;2.08;0;environmental disaster
-factory;2.08;0;environmental disaster
-experts;2.08;0;environmental disaster
-reports;2.08;0;environmental disaster
-evidence;2.08;0;environmental disaster
-extinction;2.07;0;environmental disaster
-social;2.07;0;environmental disaster
-agriculture;2.06;0;environmental disaster
-prevent;2.06;0;environmental disaster
-increases;2.06;0;environmental disaster
-short;2.05;0;environmental disaster
-readings;2.05;0;environmental disaster
-magnitude;2.04;0;environmental disaster
-education;2.04;0;environmental disaster
-samples;2.04;0;environmental disaster
-concentration;2.04;0;environmental disaster
-occurred;2.04;0;environmental disaster
-effect;2.04;0;environmental disaster
-coast;2.03;0;environmental disaster
-environment;2.03;0;environmental disaster
-tests;2.03;0;environmental disaster
-areas;2.03;0;environmental disaster
-reached;2.02;0;environmental disaster
-important;2.02;0;environmental disaster
-regions;2.02;0;environmental disaster
-plutonium;2.02;0;environmental disaster
-reactor;2.01;0;environmental disaster
-study;2.01;0;environmental disaster
-countries;2.01;0;environmental disaster
-hazards;2.0;0;environmental disaster
-design;2.0;0;environmental disaster
-results;2.0;0;environmental disaster
-actions;2.0;0;environmental disaster
-wildlife;2.0;0;environmental disaster
-incident;2.0;0;environmental disaster
-means;2.0;0;environmental disaster
-projected;2.0;0;environmental disaster
-death;2.0;0;environmental disaster
-mushrooms;2.0;0;environmental disaster
-times;1.99;0;environmental disaster
-surface;1.99;0;environmental disaster
-india;1.98;0;environmental disaster
-deaths;1.98;0;environmental disaster
-tokyo;1.98;0;environmental disaster
-training;1.97;0;environmental disaster
-biodiversity;1.97;0;environmental disaster
-needed;1.97;0;environmental disaster
-estimated;1.97;0;environmental disaster
-issue;1.97;0;environmental disaster
-capacity;1.96;0;environmental disaster
-decline;1.96;0;environmental disaster
-debate;1.95;0;environmental disaster
-brought;1.94;0;environmental disaster
-destruction;1.93;0;environmental disaster
-nauru;1.93;0;environmental disaster
-survey;1.93;0;environmental disaster
-effort;1.92;0;environmental disaster
-built;1.92;0;environmental disaster
-studies;1.92;0;environmental disaster
-nature;1.91;0;environmental disaster
-factors;1.91;0;environmental disaster
-limit;1.91;0;environmental disaster
-observed;1.91;0;environmental disaster
-provided;1.91;0;environmental disaster
-making;1.89;0;environmental disaster
-decided;1.89;0;environmental disaster
-construction;1.89;0;environmental disaster
-resulted;1.89;0;environmental disaster
-allowed;1.88;0;environmental disaster
-method;1.88;0;environmental disaster
-close;1.88;0;environmental disaster
-accident;1.87;0;environmental disaster
-ibaraki;1.86;0;environmental disaster
-resulting;1.86;0;environmental disaster
-economy;1.86;0;environmental disaster
-release;1.85;0;environmental disaster
-pesticides;1.85;0;environmental disaster
-animals;1.85;0;environmental disaster
-required;1.85;0;environmental disaster
-ministry;1.84;0;environmental disaster
-location;1.84;0;environmental disaster
-concluded;1.84;0;environmental disaster
-chiba;1.83;0;environmental disaster
-farmers;1.83;0;environmental disaster
-involved;1.82;0;environmental disaster
-measured;1.82;0;environmental disaster
-evacuation;1.82;0;environmental disaster
-office;1.82;0;environmental disaster
-years;1.82;0;environmental disaster
-identified;1.81;0;environmental disaster
-owned;1.81;0;environmental disaster
-caesium;1.81;0;environmental disaster
-radioactivity;1.8;0;environmental disaster
-injuries;1.8;0;environmental disaster
-structure;1.8;0;environmental disaster
-continue;1.8;0;environmental disaster
-history;1.8;0;environmental disaster
-000 tons;1.8;0;environmental disaster
-cattle;1.8;0;environmental disaster
-flooding;1.79;0;environmental disaster
-suggested;1.79;0;environmental disaster
-earthquake;1.78;0;environmental disaster
-forms;1.78;0;environmental disaster
-clean;1.78;0;environmental disaster
-responsible;1.77;0;environmental disaster
-shelter;1.77;0;environmental disaster
-society;1.76;0;environmental disaster
-irrigation;1.76;0;environmental disaster
-collapse;1.75;0;environmental disaster
-period;1.75;0;environmental disaster
-occur;1.74;0;environmental disaster
-ecosystems;1.74;0;environmental disaster
-domesticated;1.74;0;environmental disaster
-chemicals;1.74;0;environmental disaster
-people;1.73;0;environmental disaster
-000 people;1.73;0;environmental disaster
-failure;1.73;0;environmental disaster
-strontium;1.72;0;environmental disaster
-consequences;1.71;0;environmental disaster
-compared;1.71;0;environmental disaster
-canada;1.71;0;environmental disaster
-reactors;1.7;0;environmental disaster
-number;1.7;0;environmental disaster
-explosion;1.7;0;environmental disaster
-proposed;1.7;0;environmental disaster
-cases;1.69;0;environmental disaster
-individuals;1.69;0;environmental disaster
-families;1.69;0;environmental disaster
-africa;1.68;0;environmental disaster
-established;1.68;0;environmental disaster
-planet;1.67;0;environmental disaster
-protect;1.67;0;environmental disaster
-present;1.67;0;environmental disaster
-review;1.67;0;environmental disaster
-decades;1.67;0;environmental disaster
-concerned;1.67;0;environmental disaster
-isbns;1.67;0;environmental disaster
-range;1.65;0;environmental disaster
-halliburton;1.65;0;environmental disaster
-tested;1.65;0;environmental disaster
-operation;1.65;0;environmental disaster
-roads;1.64;0;environmental disaster
-australia;1.64;0;environmental disaster
-seawater;1.63;0;environmental disaster
-defined;1.63;0;environmental disaster
-increase;1.63;0;environmental disaster
-region;1.62;0;environmental disaster
-closed;1.62;0;environmental disaster
-threats;1.62;0;environmental disaster
-thought;1.61;0;environmental disaster
-places;1.61;0;environmental disaster
-europe;1.61;0;environmental disaster
-communities;1.61;0;environmental disaster
-considered;1.6;0;environmental disaster
-spain;1.6;0;environmental disaster
-mexico;1.59;0;environmental disaster
-types;1.59;0;environmental disaster
-hours;1.59;0;environmental disaster
-determined;1.58;0;environmental disaster
-lived;1.58;0;environmental disaster
-illness;1.58;0;environmental disaster
-trees;1.58;0;environmental disaster
-children;1.57;0;environmental disaster
-iodine;1.57;0;environmental disaster
-removal;1.57;0;environmental disaster
-depending;1.56;0;environmental disaster
-application;1.56;0;environmental disaster
-situation;1.56;0;environmental disaster
-exposed;1.56;0;environmental disaster
-leading;1.56;0;environmental disaster
-equivalent;1.55;0;environmental disaster
-amount;1.55;0;environmental disaster
-detected;1.55;0;environmental disaster
-found;1.55;0;environmental disaster
-locations;1.55;0;environmental disaster
-residents;1.54;0;environmental disaster
-cleaning;1.53;0;environmental disaster
-country;1.53;0;environmental disaster
-distribution;1.53;0;environmental disaster
-floods;1.53;0;environmental disaster
-earth;1.52;0;environmental disaster
-employees;1.51;0;environmental disaster
-malaria;1.5;0;environmental disaster
-china;1.48;0;environmental disaster
-linked;1.48;0;environmental disaster
-paper;1.47;0;environmental disaster
-infants;1.47;0;environmental disaster
-reach;1.47;0;environmental disaster
-addition;1.46;0;environmental disaster
-transocean;1.46;0;environmental disaster
-sample;1.46;0;environmental disaster
-threat;1.45;0;environmental disaster
-argued;1.45;0;environmental disaster
-completed;1.44;0;environmental disaster
-lives;1.44;0;environmental disaster
-parties;1.44;0;environmental disaster
-assigned;1.44;0;environmental disaster
-months;1.44;0;environmental disaster
-located;1.43;0;environmental disaster
-discovered;1.43;0;environmental disaster
-practice;1.43;0;environmental disaster
-difficult;1.42;0;environmental disaster
-parts;1.41;0;environmental disaster
-japan;1.41;0;environmental disaster
-terms;1.41;0;environmental disaster
-spread;1.41;0;environmental disaster
-order;1.4;0;environmental disaster
-ukraine;1.4;0;environmental disaster
-evacuated;1.38;0;environmental disaster
-russia;1.37;0;environmental disaster
-ground;1.37;0;environmental disaster
-covered;1.36;0;environmental disaster
-humans;1.36;0;environmental disaster
-build;1.36;0;environmental disaster
-zealand;1.36;0;environmental disaster
-hiroshima;1.36;0;environmental disaster
-extent;1.35;0;environmental disaster
-pripyat;1.33;0;environmental disaster
-basement;1.33;0;environmental disaster
-address;1.33;0;environmental disaster
-thousands;1.32;0;environmental disaster
-referred;1.32;0;environmental disaster
-expected;1.31;0;environmental disaster
-germany;1.29;0;environmental disaster
-variety;1.29;0;environmental disaster
-cities;1.29;0;environmental disaster
-intended;1.29;0;environmental disaster
-divided;1.28;0;environmental disaster
-ability;1.27;0;environmental disaster
-place;1.27;0;environmental disaster
-atmosphere;1.26;0;environmental disaster
-france;1.25;0;environmental disaster
-contribute;1.25;0;environmental disaster
-believed;1.25;0;environmental disaster
-result;1.24;0;environmental disaster
-attempt;1.24;0;environmental disaster
-majority;1.23;0;environmental disaster
-subject;1.22;0;environmental disaster
-decision;1.22;0;environmental disaster
-account;1.22;0;environmental disaster
-removed;1.21;0;environmental disaster
-beginning;1.2;0;environmental disaster
-prepare;1.18;0;environmental disaster
-start;1.18;0;environmental disaster
-kilogram;1.17;0;environmental disaster
-identify;1.17;0;environmental disaster
-ashes;1.15;0;environmental disaster
-determine;1.15;0;environmental disaster
-replaced;1.15;0;environmental disaster
-belarus;1.15;0;environmental disaster
-person;1.14;0;environmental disaster
-combination;1.14;0;environmental disaster
-shown;1.11;0;environmental disaster
-weeks;1.1;0;environmental disaster
-introduction;1.08;0;environmental disaster
-calculated;1.08;0;environmental disaster
-decade;1.07;0;environmental disaster
-comparison;1.06;0;environmental disaster
-presence;1.06;0;environmental disaster
-possibility;1.05;0;environmental disaster
-morning;1.0;0;environmental disaster
-gallons;1.0;0;environmental disaster
-vicinity;1.0;0;environmental disaster
-aftermath;1.0;0;environmental disaster
-effectiveness;1.0;0;environmental disaster
+late 19th century;7.53;0;Baseball
+national league;7.07;0;Baseball
+major leagues;6.68;0;Baseball
+home run;6.04;0;Baseball
+second baseman;5.84;0;Baseball
+two outs;5.63;0;Baseball
+third base;5.17;0;Baseball
+first base;4.94;0;Baseball
+batting order;4.7;0;Baseball
+nine innings;4.67;0;Baseball
+lineup card;4.6;0;Baseball
+foul territory;4.54;0;Baseball
+second base;4.39;0;Baseball
+foul lines;4.29;0;Baseball
+first batter;4.1;0;Baseball
+organized play;4.06;0;Baseball
+handed hitter;4.05;0;Baseball
+box score;4.0;0;Baseball
+united states;4.0;0;Baseball
+fifth batter;3.7;0;Baseball
+score runs;3.67;0;Baseball
+warning track;3.61;0;Baseball
+line drive;3.5;0;Baseball
+turn;3.4;0;Baseball
+leading;3.33;0;Baseball
+one;3.12;0;Baseball
+baseball;2.87;0;Baseball
+used;2.86;0;Baseball
+game;2.81;0;Baseball
+two;2.8;0;Baseball
+also;2.67;0;Baseball
+third;2.62;0;Baseball
+position;2.57;0;Baseball
+base;2.55;0;Baseball
+hitters;2.5;0;Baseball
+outside;2.43;0;Baseball
+first;2.39;0;Baseball
+three;2.38;0;Baseball
+players;2.3;0;Baseball
+caught;2.2;0;Baseball
+white;2.2;0;Baseball
+player;2.18;0;Baseball
+team;2.11;0;Baseball
+may;2.07;0;Baseball
+field;2.07;0;Baseball
+play;2.06;0;Baseball
+hitter;2.05;0;Baseball
+make;2.0;0;Baseball
+lineup;2.0;0;Baseball
+called;2.0;0;Baseball
+innings;2.0;0;Baseball
+spot;2.0;0;Baseball
+particular;2.0;0;Baseball
+catcher;2.0;0;Baseball
+winning;2.0;0;Baseball
+fielder;1.89;0;Baseball
+pitcher;1.88;0;Baseball
+track;1.86;0;Baseball
+hit;1.85;0;Baseball
+second;1.84;0;Baseball
+played;1.8;0;Baseball
+power;1.75;0;Baseball
+top;1.75;0;Baseball
+often;1.75;0;Baseball
+early;1.71;0;Baseball
+set;1.71;0;Baseball
+batter;1.7;0;Baseball
+grass;1.67;0;Baseball
+runs;1.67;0;Baseball
+speed;1.67;0;Baseball
+bowlers;1.67;0;Baseball
+natural;1.67;0;Baseball
+sacrifice;1.67;0;Baseball
+sport;1.67;0;Baseball
+shortstop;1.67;0;Baseball
+right;1.67;0;Baseball
+bat;1.56;0;Baseball
+drive;1.5;0;Baseball
+beginning;1.5;0;Baseball
+source;1.5;0;Baseball
+history;1.5;0;Baseball
+ball;1.45;0;Baseball
+hole;1.33;0;Baseball
+since;1.33;0;Baseball
+made;1.33;0;Baseball
+case;1.33;0;Baseball
+point;1.33;0;Baseball
+part;1.33;0;Baseball
+usually;1.33;0;Baseball
+use;1.33;0;Baseball
+blue;1.33;0;Baseball
+ability;1.25;0;Baseball
+struck;1.25;0;Baseball
+stars;1.25;0;Baseball
+left;1.2;0;Baseball
+threw;1.2;0;Baseball
+runners;1.2;0;Baseball
+canada;1.0;0;Baseball
+rounders;1.0;0;Baseball
+non;1.0;0;Baseball
+well;1.0;0;Baseball
+though;1.0;0;Baseball
+known;1.0;0;Baseball
+stepped;1.0;0;Baseball
+wall;1.0;0;Baseball
+get;1.0;0;Baseball
+japan;1.0;0;Baseball
+athletes;1.0;0;Baseball
+throw;1.0;0;Baseball
+attempts;1.0;0;Baseball
+member;1.0;0;Baseball
+lead;1.0;0;Baseball
+unless;1.0;0;Baseball
+put;1.0;0;Baseball
+english;1.0;0;Baseball
+held;1.0;0;Baseball
+referred;1.0;0;Baseball
+runner;1.0;0;Baseball
+closest;1.0;0;Baseball
+direction;1.0;0;Baseball
+baserunners;1.0;0;Baseball
+clean;1.0;0;Baseball
+likely;1.0;0;Baseball
+infield;1.0;0;Baseball
+long;1.0;0;Baseball
+none;1.0;0;Baseball
+addition;1.0;0;Baseball
+recognized;1.0;0;Baseball
+year;1.0;0;Baseball
+nation;1.0;0;Baseball
+introduced;1.0;0;Baseball
+walk;1.0;0;Baseball
+dropped;1.0;0;Baseball
+credited;1.0;0;Baseball
+cuba;1.0;0;Baseball
+expected;1.0;0;Baseball
+st;1.0;0;Baseball
+national basketball players association;15.99;1;Basketball
+naismith memorial basketball hall;14.15;1;Basketball
+valuable player award;8.33;1;Basketball
+nba first team;8.0;1;Basketball
+holy cross;6.31;1;Basketball
+first president;5.15;1;Basketball
+nba first;5.04;1;Basketball
+joe mullaney;5.0;1;Basketball
+future hall;4.8;1;Basketball
+six freshmen;4.67;1;Basketball
+boston celtics;4.55;1;Basketball
+celtics reached;4.55;1;Basketball
+cousy introduced;4.46;1;Basketball
+passing skills;4.33;1;Basketball
+back dribbling;4.11;1;Basketball
+next tournament;4.11;1;Basketball
+playing time;4.0;1;Basketball
+1950 ncaa tournament;3.86;1;Basketball
+cincinnati royals;3.67;1;Basketball
+basketball;3.35;1;Basketball
+two;3.2;1;Basketball
+star;3.2;1;Basketball
+american;3.0;1;Basketball
+fame;3.0;1;Basketball
+team;2.96;1;Basketball
+assists;2.94;1;Basketball
+three;2.83;1;Basketball
+school;2.78;1;Basketball
+coach;2.75;1;Basketball
+led;2.67;1;Basketball
+cousy;2.66;1;Basketball
+screener;2.6;1;Basketball
+celtics;2.55;1;Basketball
+league;2.5;1;Basketball
+get;2.5;1;Basketball
+would;2.43;1;Basketball
+game;2.33;1;Basketball
+last;2.33;1;Basketball
+season;2.27;1;Basketball
+life;2.25;1;Basketball
+nba;2.22;1;Basketball
+playing;2.22;1;Basketball
+women;2.2;1;Basketball
+eight;2.2;1;Basketball
+points;2.2;1;Basketball
+played;2.17;1;Basketball
+also;2.17;1;Basketball
+back;2.11;1;Basketball
+year;2.09;1;Basketball
+named;2.0;1;Basketball
+could;2.0;1;Basketball
+boston;2.0;1;Basketball
+time;1.78;1;Basketball
+3 seasons;1.75;1;Basketball
+number;1.67;1;Basketball
+use;1.67;1;Basketball
+court;1.62;1;Basketball
+play;1.6;1;Basketball
+cutter;1.5;1;Basketball
+went;1.5;1;Basketball
+called;1.5;1;Basketball
+half;1.4;1;Basketball
+one;1.36;1;Basketball
+powered;1.33;1;Basketball
+behind;1.29;1;Basketball
+record;1.29;1;Basketball
+hawks 4;1.25;1;Basketball
+division;1.25;1;Basketball
+making;1.2;1;Basketball
+started;1.2;1;Basketball
+including;1.0;1;Basketball
+however;1.0;1;Basketball
+regarded;1.0;1;Basketball
+result;1.0;1;Basketball
+addition;1.0;1;Basketball
+basket;1.0;1;Basketball
+summer;1.0;1;Basketball
+nbl;1.0;1;Basketball
+described;1.0;1;Basketball
+continued;1.0;1;Basketball
+start;1.0;1;Basketball
+failing;1.0;1;Basketball
+win;1.0;1;Basketball
+much;1.0;1;Basketball
+family;1.0;1;Basketball
+still;1.0;1;Basketball
+ball;1.0;1;Basketball
+houdini;1.0;1;Basketball
+hardwood;1.0;1;Basketball
+nickname;1.0;1;Basketball
+opposition;1.0;1;Basketball
+massachusetts;1.0;1;Basketball
+hit;1.0;1;Basketball
+fact;1.0;1;Basketball
+close;1.0;1;Basketball
+coached;1.0;1;Basketball
+make;1.0;1;Basketball
+cut;1.0;1;Basketball
+voted;1.0;1;Basketball
+wanted;1.0;1;Basketball
+spent;1.0;1;Basketball
+tri;1.0;1;Basketball
+using;1.0;1;Basketball
+promoted;1.0;1;Basketball
+#14 jersey;1.0;1;Basketball
+pga tour;5.71;2;Golf
+open championship;5.18;2;Golf
+united states;4.8;2;Golf
+hole course;4.74;2;Golf
+first shot;4.73;2;Golf
+standard course;4.55;2;Golf
+iron shots;4.33;2;Golf
+first played;4.33;2;Golf
+woods released;4.32;2;Golf
+stroke play;4.07;2;Golf
+british open;3.92;2;Golf
+associate member;3.75;2;Golf
+quality grasses;3.67;2;Golf
+club continues;3.61;2;Golf
+golf;3.16;2;Golf
+may;3.06;2;Golf
+win;2.86;2;Golf
+links;2.8;2;Golf
+named;2.75;2;Golf
+one;2.71;2;Golf
+winning;2.67;2;Golf
+among;2.67;2;Golf
+clubs;2.57;2;Golf
+courses;2.57;2;Golf
+course;2.55;2;Golf
+world;2.44;2;Golf
+players;2.42;2;Golf
+missed;2.33;2;Golf
+woods;2.32;2;Golf
+senior;2.29;2;Golf
+use;2.27;2;Golf
+either 9;2.25;2;Golf
+open;2.25;2;Golf
+wolf;2.25;2;Golf
+higher;2.2;2;Golf
+hole;2.19;2;Golf
+tournament;2.12;2;Golf
+18 holes;2.12;2;Golf
+holes;2.12;2;Golf
+year;2.09;2;Golf
+golfer;2.0;2;Golf
+would;2.0;2;Golf
+making;2.0;2;Golf
+player;2.0;2;Golf
+tiger;2.0;2;Golf
+putts;2.0;2;Golf
+area;2.0;2;Golf
+club;1.94;2;Golf
+distance;1.88;2;Golf
+ladies;1.83;2;Golf
+event;1.83;2;Golf
+play;1.82;2;Golf
+par;1.82;2;Golf
+record;1.8;2;Golf
+season;1.75;2;Golf
+markers;1.75;2;Golf
+normal;1.67;2;Golf
+tee;1.67;2;Golf
+held;1.67;2;Golf
+women;1.67;2;Golf
+green;1.62;2;Golf
+played;1.6;2;Golf
+game;1.57;2;Golf
+grass;1.57;2;Golf
+ball;1.53;2;Golf
+rules;1.5;2;Golf
+playing;1.5;2;Golf
+line;1.5;2;Golf
+handicap;1.5;2;Golf
+money;1.5;2;Golf
+short;1.5;2;Golf
+became;1.44;2;Golf
+used;1.43;2;Golf
+men;1.4;2;Golf
+made;1.4;2;Golf
+bounds;1.33;2;Golf
+good;1.33;2;Golf
+part;1.33;2;Golf
+common;1.33;2;Golf
+drive;1.33;2;Golf
+putt;1.33;2;Golf
+years;1.33;2;Golf
+hitting;1.33;2;Golf
+name;1.33;2;Golf
+fairway;1.2;2;Golf
+set;1.0;2;Golf
+rough;1.0;2;Golf
+sand;1.0;2;Golf
+easier;1.0;2;Golf
+difficult;1.0;2;Golf
+stance;1.0;2;Golf
+rest;1.0;2;Golf
+california;1.0;2;Golf
+website;1.0;2;Golf
+case;1.0;2;Golf
+number;1.0;2;Golf
+grain;1.0;2;Golf
+evolved;1.0;2;Golf
+instance;1.0;2;Golf
+able;1.0;2;Golf
+hit;1.0;2;Golf
+saying;1.0;2;Golf
+wrong;1.0;2;Golf
+accident;1.0;2;Golf
+statement;1.0;2;Golf
+helping;1.0;2;Golf
+well;1.0;2;Golf
+ability;1.0;2;Golf
+constructed;1.0;2;Golf
+considered;1.0;2;Golf
+amateurs;1.0;2;Golf
+broken;1.0;2;Golf
+built;1.0;2;Golf
+followed;1.0;2;Golf
+metal;1.0;2;Golf
+replaced;1.0;2;Golf
+federation;1.0;2;Golf
+hip;1.0;2;Golf
+việt võ đạo federation;27.44;3;Judo
+vovinam việt võ đạo;25.69;3;Judo
+việt võ đạo;22.32;3;Judo
+nguyễn lộc;17.43;3;Judo
+viet vo dao;13.42;3;Judo
+vietnamese martial arts;9.07;3;Judo
+nguyễn;8.56;3;Judo
+dương;7.25;3;Judo
+martial arts;6.07;3;Judo
+vovinam schools;5.88;3;Judo
+martial art;5.77;3;Judo
+international vovinam;5.71;3;Judo
+weave gis;5.56;3;Judo
+vovinam student;5.09;3;Judo
+red text;5.0;3;Judo
+blue judogi;4.78;3;Judo
+weave judogi;4.78;3;Judo
+traditional wrestling;4.7;3;Judo
+yellow belt;4.67;3;Judo
+dao;4.54;3;Judo
+said;4.0;3;Judo
+master;4.0;3;Judo
+judo practice;3.88;3;Judo
+germany;3.67;3;Judo
+yang symbol;3.55;3;Judo
+vovinam;3.38;3;Judo
+mental state;3.22;3;Judo
+arts;2.86;3;Judo
+âm;2.8;3;Judo
+techniques;2.69;3;Judo
+without;2.57;3;Judo
+red;2.57;3;Judo
+judogi;2.47;3;Judo
+belt;2.35;3;Judo
+yellow;2.31;3;Judo
+weave;2.31;3;Judo
+blue;2.31;3;Judo
+competition;2.29;3;Judo
+using;2.25;3;Judo
+vietnam;2.18;3;Judo
+judo;2.13;3;Judo
+color;2.11;3;Judo
+also;2.08;3;Judo
+japanese;2.0;3;Judo
+hand;2.0;3;Judo
+back;2.0;3;Judo
+attacks;2.0;3;Judo
+defense;1.88;3;Judo
+sword;1.86;3;Judo
+used;1.82;3;Judo
+student;1.71;3;Judo
+wear;1.67;3;Judo
+develop;1.67;3;Judo
+denmark;1.67;3;Judo
+single;1.67;3;Judo
+reaction;1.67;3;Judo
+death;1.67;3;Judo
+free;1.6;3;Judo
+move;1.6;3;Judo
+spirit;1.6;3;Judo
+person;1.6;3;Judo
+one;1.57;3;Judo
+wrestling;1.5;3;Judo
+people;1.5;3;Judo
+mind;1.47;3;Judo
+double;1.44;3;Judo
+hard;1.43;3;Judo
+yin;1.4;3;Judo
+black;1.4;3;Judo
+feet;1.33;3;Judo
+goal;1.33;3;Judo
+developed;1.33;3;Judo
+based;1.33;3;Judo
+principle;1.33;3;Judo
+heart;1.33;3;Judo
+soft;1.33;3;Judo
+uses;1.33;3;Judo
+knife;1.33;3;Judo
+uniforms;1.33;3;Judo
+uwagi;1.33;3;Judo
+may;1.33;3;Judo
+although;1.33;3;Judo
+opponent;1.3;3;Judo
+france;1.25;3;Judo
+australia;1.25;3;Judo
+technique;1.25;3;Judo
+body;1.25;3;Judo
+prefer;1.25;3;Judo
+state;1.22;3;Judo
+self;1.17;3;Judo
+mushin;1.0;3;Judo
+achieved;1.0;3;Judo
+way;1.0;3;Judo
+objective;1.0;3;Judo
+forms;1.0;3;Judo
+staff;1.0;3;Judo
+well;1.0;3;Judo
+combat;1.0;3;Judo
+wears;1.0;3;Judo
+founded;1.0;3;Judo
+time;1.0;3;Judo
+bridge;1.0;3;Judo
+think;1.0;3;Judo
+man;1.0;3;Judo
+attachment;1.0;3;Judo
+dislodge;1.0;3;Judo
+fit;1.0;3;Judo
+tolerance;1.0;3;Judo
+character;1.0;3;Judo
+see;1.0;3;Judo
+ego;1.0;3;Judo
+headquarter;1.0;3;Judo
+kimono;1.0;3;Judo
+italy;1.0;3;Judo
+belgium;1.0;3;Judo
+switzerland;1.0;3;Judo
+grab;1.0;3;Judo
+legs;1.0;3;Judo
+able;1.0;3;Judo
+harmony;1.0;3;Judo
+obi;1.0;3;Judo
+hope;1.0;3;Judo
+top;1.0;3;Judo
+added;1.0;3;Judo
+shown;1.0;3;Judo
+considered;1.0;3;Judo
+established;1.0;3;Judo
+ashiwaza;1.0;3;Judo
+morocco;1.0;3;Judo
+spain;1.0;3;Judo
+everything;1.0;3;Judo
+order;1.0;3;Judo
+practiced;1.0;3;Judo
+carry;1.0;3;Judo
+act;1.0;3;Judo
+invited;1.0;3;Judo
+hanoi;1.0;3;Judo
+teach;1.0;3;Judo
+classified;1.0;3;Judo
+top divisions feature highly paid star players;38.88;4;Soccer
+first official international football match also took place;36.92;4;Soccer
+association football playersfederation internationale de football association;34.1;4;Soccer
+football governing bodies introduced standardised rules;23.7;4;Soccer
+top association football goal scorerslist;18.04;4;Soccer
+highest global television audience;16.0;4;Soccer
+international football association board;15.13;4;Soccer
+national association football teamslist;14.51;4;Soccer
+documented early european team;12.95;4;Soccer
+new zealand use either;12.0;4;Soccer
+although national associations;11.03;4;Soccer
+international football body;10.27;4;Soccer
+usually placed behind;10.0;4;Soccer
+association football clubslist;9.95;4;Soccer
+association football stadiums;9.95;4;Soccer
+association football clubslists;9.95;4;Soccer
+including association football;9.62;4;Soccer
+national teams vie;9.2;4;Soccer
+activist nettie honeyball;9.0;4;Soccer
+year qualification phase;9.0;4;Soccer
+final proximate cause;8.83;4;Soccer
+professionalism spread around;8.67;4;Soccer
+resembled rugby football;8.63;4;Soccer
+association football;6.95;4;Soccer
+23 years old;6.33;4;Soccer
+new zealand;6.0;4;Soccer
+aston villa;6.0;4;Soccer
+cuju games;5.88;4;Soccer
+lower divisions;5.83;4;Soccer
+football war;5.63;4;Soccer
+players may;5.52;4;Soccer
+opposing team;5.49;4;Soccer
+first drawn;5.31;4;Soccer
+eleven players;5.04;4;Soccer
+players allowed;5.04;4;Soccer
+primarily use;5.0;4;Soccer
+professional level;5.0;4;Soccer
+world cup;4.95;4;Soccer
+south america;4.93;4;Soccer
+smaller countries;4.9;4;Soccer
+current format;4.6;4;Soccer
+current champion;4.6;4;Soccer
+cambridge rules;4.57;4;Soccer
+goal may;4.56;4;Soccer
+united states;4.5;4;Soccer
+goal line;4.34;4;Soccer
+extra time;4.34;4;Soccer
+widely considered;4.33;4;Soccer
+subsequent codes;4.33;4;Soccer
+south africa;4.27;4;Soccer
+subdivided according;4.2;4;Soccer
+player spends;4.2;4;Soccer
+el salvador;4.0;4;Soccer
+han dynasty;4.0;4;Soccer
+would adhere;4.0;4;Soccer
+cambridge university;4.0;4;Soccer
+particularly influential;4.0;4;Soccer
+formal name;4.0;4;Soccer
+top;4.0;4;Soccer
+socially acceptable;4.0;4;Soccer
+penalty area;3.98;4;Soccer
+added time;3.8;4;Soccer
+second job;3.67;4;Soccer
+prohibit violence;3.67;4;Soccer
+scored directly;3.6;4;Soccer
+standardised;3.5;4;Soccer
+eastern europe;3.5;4;Soccer
+also;3.5;4;Soccer
+football;3.29;4;Soccer
+players;3.04;4;Soccer
+use;3.0;4;Soccer
+match;2.8;4;Soccer
+within;2.8;4;Soccer
+games;2.62;4;Soccer
+rules;2.57;4;Soccer
+confederation;2.5;4;Soccer
+kick;2.43;4;Soccer
+world;2.41;4;Soccer
+front;2.33;4;Soccer
+english;2.33;4;Soccer
+team;2.29;4;Soccer
+player;2.2;4;Soccer
+uefa;2.2;4;Soccer
+fifa;2.14;4;Soccer
+time;2.14;4;Soccer
+goal;2.09;4;Soccer
+playing;2.0;4;Soccer
+one;2.0;4;Soccer
+fa;2.0;4;Soccer
+country;2.0;4;Soccer
+awarded;2.0;4;Soccer
+tournament;1.89;4;Soccer
+area;1.78;4;Soccer
+set;1.75;4;Soccer
+ball;1.71;4;Soccer
+women;1.68;4;Soccer
+game;1.68;4;Soccer
+end;1.67;4;Soccer
+concacaf;1.67;4;Soccer
+ofc;1.67;4;Soccer
+scored;1.6;4;Soccer
+three;1.6;4;Soccer
+play;1.53;4;Soccer
+number;1.5;4;Soccer
+known;1.5;4;Soccer
+europe;1.5;4;Soccer
+laws;1.4;4;Soccer
+played;1.33;4;Soccer
+mark;1.33;4;Soccer
+hands;1.33;4;Soccer
+opponent;1.33;4;Soccer
+contested;1.33;4;Soccer
+england;1.25;4;Soccer
+field;1.25;4;Soccer
+referee;1.17;4;Soccer
+example;1.0;4;Soccer
+contrast;1.0;4;Soccer
+june 1969;1.0;4;Soccer
+stopped;1.0;4;Soccer
+well;1.0;4;Soccer
+founded;1.0;4;Soccer
+formed;1.0;4;Soccer
+paris;1.0;4;Soccer
+declared;1.0;4;Soccer
+circumference;1.0;4;Soccer
+bronze;1.0;4;Soccer
+japan;1.0;4;Soccer
+went;1.0;4;Soccer
+positions;1.0;4;Soccer
+mid;1.0;4;Soccer
+scotland;1.0;4;Soccer
+part;1.0;4;Soccer
+timers;1.0;4;Soccer
+word;1.0;4;Soccer
+arms;1.0;4;Soccer
+futsal;1.0;4;Soccer
+development;1.0;4;Soccer
+making;1.0;4;Soccer
+left;1.0;4;Soccer
+based;1.0;4;Soccer
+provided;1.0;4;Soccer
+men;1.0;4;Soccer
+australia;1.0;4;Soccer
+ireland;1.0;4;Soccer
+terms;1.0;4;Soccer
+score;1.0;4;Soccer
+codified;1.0;4;Soccer
+kicking;1.0;4;Soccer
+levels;1.0;4;Soccer
+required;1.0;4;Soccer
+officiated;1.0;4;Soccer
+incorrect;1.0;4;Soccer
+23 slots;1.0;4;Soccer
+caf;1.0;4;Soccer
+afc;1.0;4;Soccer
+glasgow;1.0;4;Soccer
+instigation;1.0;4;Soccer
+gap;1.0;4;Soccer
+quality;1.0;4;Soccer
+appear;1.0;4;Soccer
+wrestling;1.0;4;Soccer
+volleyball;1.0;4;Soccer
+recognizable;1.0;4;Soccer
+skillslist;1.0;4;Soccer
+countrylist;1.0;4;Soccer
+curlie;1.0;4;Soccer
+dmoz;1.0;4;Soccer
+pitch;1.0;4;Soccer
+penal;1.0;4;Soccer
+winners;1.0;4;Soccer
+non;1.0;4;Soccer

@@ -31,24 +31,30 @@ lang_dict={
 	"japanese" : "ja",
 	"dutch" : "nl",
 	"portuguese" : "pt",
-	"brasilian" : "pt - br",
-	"romanian" : "ru",
+	"brasilian" : "pt-br",
+	"romanian" : "ro",
 	"russian" : "ru",
 }
+
+def rever_dict(my_dict):
+    return {v: k for k, v in my_dict.items()}
 
 def text_to_keyword_dataframe(text, class_labelized,
                               number_of_character_per_word_at_least,
                               number_of_words_at_most_per_phrase,
                               number_of_keywords_appears_in_the_text_at_least):
     # print('Keyword Extraction by NLTK, In Progress...')
-    rake_object = rake.Rake(lang, number_of_character_per_word_at_least, number_of_words_at_most_per_phrase, number_of_keywords_appears_in_the_text_at_least)
+    language = rever_dict(lang_dict)[lang]
+    rake_object = rake.Rake(language, number_of_character_per_word_at_least, number_of_words_at_most_per_phrase, number_of_keywords_appears_in_the_text_at_least)
     keywords = rake_object.run(text)
     if len(keywords) == 0:
         print(
-            'Hum no keyword find, are you sure it\s an english document ?? Or I cannot understand this document sorry')
-        return None
+            '{ERROR] Hum no keyword find... Review your settings. Or I cannot understand this document sorry')
+        return None,None
     # remove words with \
     keywords = [i for i in keywords if "\\" not in keywords[0]]
+    if len(keywords) == 0:
+        raise ValueError('[ERROR] Hum no keyword find for all article, please review your seetings')
     df = pd.DataFrame(keywords)
     df.pivot(columns=0, values=1)
     df.columns = ['KeyWord', "Score"]
@@ -72,6 +78,11 @@ def get_df_keyword_from_content(df, content_col, class_col,
                                                  number_of_words_at_most_per_phrase,
                                                  number_of_keywords_appears_in_the_text_at_least
                                                  )
+        try:
+            if df == None:
+                continue
+        except TypeError:
+            pass
         df_k = df_k.append(df)
     # replace value labelized with mapped value from mapping file
     json_file = open(mapping_file)
@@ -128,13 +139,17 @@ def up_wiki_dico(wiki_dico, max_article_links=None):
                     list(wiki_dico[theme_list[j]].keys())
                 )
             )
-    #remove intersection + random tirage
+    #remove intersection + random sampling
     for key, values in wiki_dico.items():
         list_of_key_without_current_key = list(wiki_dico.keys())
         list_of_key_without_current_key.remove(key)
         if max_article_links != None:
-            key_random = list(random.sample(list(set(values)-set(intersection_list)), max_article_links))
-
+            list_to_check = list(set(values)-set(intersection_list))
+            if len(list_to_check)> max_article_links:
+                key_random = list(random.sample(list_to_check, max_article_links))
+            else:
+                print('{} not enough article to be sampled'.format(key))
+                key_random=list_to_check
             wiki_dico[key] = {k: v for k, v in values.items() if (
                         k not in intersection_list and k in key_random and k not in list_of_key_without_current_key) or (
                                           k == key)}
@@ -160,6 +175,7 @@ def get_global_page_id_wiki_links_list(links):
     return wiki_dico__for_one_theme
 
 def set_lang(lg='english'):
+    lg = lg.lower()
     if lg not in list(lang_dict.keys()):
         print('Language supported:')
         print(list(lang_dict.keys()))
@@ -283,14 +299,15 @@ def construct_database_from_knwoledge_base(wiki_dico_path, database_file_ouput):
             print('Getting page \r{}'.format(str(key2)))
             try:
                 page = clean_wiki_page(wikipedia.page(pageid=value2).content)
+                df_tmp = pd.DataFrame({"Content": page,
+                                       "Class": key,
+                                       "SubClass": key2}, index=[0])
+                df_database = df_database.append(df_tmp, ignore_index=True)
+                df_database.reset_index(inplace=True, drop=True)
             except:
                 print('[ERROR] PageID do not valid for {0} with pageid: {1} or Disambiguation Error'.format(key2,value2))
             # add new entry in database
-            df_tmp = pd.DataFrame({"Content": page,
-                                   "Class": key,
-                                   "SubClass": key2}, index=[0])
-            df_database = df_database.append(df_tmp, ignore_index=True)
-            df_database.reset_index(inplace=True, drop=True)
+
     le = preprocessing.LabelEncoder()
     le.fit(df_database.Class)
     le_name_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
@@ -338,7 +355,7 @@ def train_classifier(X, y):
     min_samples_leaf = [1,2,3]
     parameters = {'n_estimators': n_estimators, 'min_samples_leaf': min_samples_leaf,
                   'min_samples_split': min_samples_split}
-    clf = GridSearchCV(RFC(verbose=1, n_jobs=-1), cv=None, param_grid=parameters,verbose=1)
+    clf = GridSearchCV(RFC(verbose=0, n_jobs=-1), cv=None, param_grid=parameters,verbose=0)
     clf.fit(X, y)
     return clf
 
@@ -359,7 +376,7 @@ def sort_keyword_from_database(df, number_of_character_per_word_at_least,
                                number_of_keywords_appears_in_the_text_at_least,
                                content_col="Content", class_col="class_labelized", stoppath="Stoplist.txt"):
     print('[INFO] Sort Keyword From Database...')
-    df_k = get_df_keyword_from_content(df, content_col, class_col, stoppath,
+    df_k = get_df_keyword_from_content(df, content_col, class_col,
                                        number_of_character_per_word_at_least,
                            number_of_words_at_most_per_phrase,
                            number_of_keywords_appears_in_the_text_at_least)
