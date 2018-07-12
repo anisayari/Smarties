@@ -1,8 +1,6 @@
 import Smarties as sm
 
 wiki_dico_path = "wiki_dico.json"
-#TODO import and nltk and create function to adapat to each language
-stoppath = "Stoplist.txt"
 
 #database_file = "corpus.csv"
 
