@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(name='Smarties',
 
-      version='1.1',
+      version='1.2',
 
       url='https://github.com/anisayari/Smarties',
 
@@ -12,7 +12,7 @@ setup(name='Smarties',
 
       author_email='anis.ayari.pro@gmail.com',
 
-      description='A Smart AI Text Classifier',
+      description='A Smart AI Text Learner and Classifier',
 
       packages=find_packages(exclude=['tests']),
 

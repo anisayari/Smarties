@@ -1,3 +1,6 @@
+#Version modified by Anis AYARI to support multilang stopword from nltk (need to be improved)
+
+
 # Implementation of RAKE - Rapid Automatic Keyword Extraction algorithm
 # as described in:
 # Rose, S., D. Engel, N. Cramer, and W. Cowley (2010).
@@ -23,6 +26,7 @@ import operator
 import six
 from six.moves import range
 from collections import Counter
+from nltk.corpus import stopwords
 
 debug = False
 test = False
@@ -241,10 +245,21 @@ def generate_candidate_keyword_scores(phrase_list, word_score, min_keyword_frequ
 
 
 class Rake(object):
-    def __init__(self, stop_words_path, min_char_length=1, max_words_length=5, min_keyword_frequency=1,
+    # def __init__(self, lang, min_char_length=1, max_words_length=5, min_keyword_frequency=1,
+    #              min_words_length_adj=1, max_words_length_adj=1, min_phrase_freq_adj=2):
+    #     self.__stop_words_path = stop_words_path
+    #     self.__stop_words_list = load_stop_words(stop_words_path)
+    #     self.__min_char_length = min_char_length
+    #     self.__max_words_length = max_words_length
+    #     self.__min_keyword_frequency = min_keyword_frequency
+    #     self.__min_words_length_adj = min_words_length_adj
+    #     self.__max_words_length_adj = max_words_length_adj
+    #     self.__min_phrase_freq_adj = min_phrase_freq_adj
+
+    def __init__(self, lang, min_char_length=1, max_words_length=5, min_keyword_frequency=1,
                  min_words_length_adj=1, max_words_length_adj=1, min_phrase_freq_adj=2):
-        self.__stop_words_path = stop_words_path
-        self.__stop_words_list = load_stop_words(stop_words_path)
+        self.lang=lang
+        self.__stop_words_list= stopwords.words(self.lang)
         self.__min_char_length = min_char_length
         self.__max_words_length = max_words_length
         self.__min_keyword_frequency = min_keyword_frequency
@@ -269,7 +284,6 @@ class Rake(object):
         sorted_keywords = sorted(six.iteritems(keyword_candidates), key=operator.itemgetter(1), reverse=True)
         return sorted_keywords
 
-
 if test and __name__ == '__main__':
     text = "Compatibility of systems of linear constraints over the set of natural numbers. Criteria of compatibility of a system of linear Diophantine equations, strict inequations, and nonstrict inequations are considered. Upper bounds for components of a minimal set of solutions and algorithms of construction of minimal generating sets of solutions for all types of systems are given. These criteria and the corresponding algorithms for constructing a minimal supporting set of solutions can be used in solving all the considered types of systems and systems of mixed types."
 
@@ -280,7 +294,9 @@ if test and __name__ == '__main__':
     stopwordpattern = build_stop_word_regex(stoppath)
 
     # generate candidate keywords
-    phraseList = generate_candidate_keywords(sentenceList, stopwordpattern, load_stop_words(stoppath))
+    #phraseList = generate_candidate_keywords(sentenceList, stopwordpattern, load_stop_words(stoppath))
+    #Using NLTK stopword
+    phraseList = generate_candidate_keywords(sentenceList, stopwordpattern, stopwords.words(lang))
 
     # calculate individual word scores
     wordscores = calculate_word_scores(phraseList)
