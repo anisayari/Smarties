@@ -85,6 +85,8 @@ def get_df_keyword_from_content(df, content_col, class_col,
             pass
         df_k = df_k.append(df)
     # replace value labelized with mapped value from mapping file
+    if df_k.shape[0]==0:
+        raise TypeError('No keyword found, please check your settings')
     json_file = open(mapping_file)
     json_str = json_file.read()
     mapping_dico = json.loads(json_str)
@@ -227,6 +229,7 @@ def construct_wiki_dico(wiki_dico_path, title_theme_list, init=False, find_links
             if pageid not in wiki_dico[theme]:
                 try:
                     add_entry_to_json(wiki_dico_path, theme=theme, pageid=pageid, title=title)
+                    wiki_dico[theme][theme]=pageid
                     # print('Title {} added with sucess to the theme {} !'.format(title,theme))
                 except wikipedia.exceptions.DisambiguationError as e:
                     print('[ERROR] Look like I found many related topic about that... select one and try again please:')
@@ -235,12 +238,12 @@ def construct_wiki_dico(wiki_dico_path, title_theme_list, init=False, find_links
                 if find_links:
                     page_primary = wikipedia.page(pageid=pageid)
                     links = page_primary.links
-                dico_tmp = {key: 0 for key in links if key not in list(wiki_dico[theme])}
-                for key,value in dico_tmp.items():
-                    if key in list(dico_tmp.keys()):
-                        wiki_dico[theme][key]=dico_tmp[key]
-                    else:
-                        wiki_dico[theme][key]=value
+                    dico_tmp = {key: 0 for key in links if key not in list(wiki_dico[theme])}
+                    for key,value in dico_tmp.items():
+                        if key in list(dico_tmp.keys()):
+                            wiki_dico[theme][key]=dico_tmp[key]
+                        else:
+                            wiki_dico[theme][key]=value
             else:
                 print(
                     '[ERROR] Hum, look like I already know this Wikipedia Article ' + title + ' try to learn me something else please ! \n')
