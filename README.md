@@ -30,7 +30,7 @@ pip install Smarties
 wiki_dico_path = "wiki_dico.json"
 
 if __name__ == '__main__':
-    sm.define_language('fr')
+    sm.set_lang('english')
     #construct the knowledge base to a wiki_dico.json file
     title_theme_list = []
     title_theme_list.append(('Soccer', 'Soccer'))
