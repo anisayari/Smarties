@@ -16,6 +16,11 @@ from . import rake
 import urllib
 import os
 import random
+from mwviews.api import PageviewsClient
+import datetime
+import operator
+import networkx as nx
+import py2neo
 
 mapping_file = 'mapping.json'
 lang='en'
@@ -208,6 +213,49 @@ def get_page_id(title):
     return int(next(iter(data["pages"])))
 
 
+def get_linked_page(pageid):
+    #TODO need to define a linked prediction ML Model
+    page_primary = wikipedia.page(pageid=pageid)
+    links = page_primary.links
+
+def get_page_views_dict(links):
+    p=PageviewsClient()
+    #today = datetime.datetime.today()
+    #today = today.strftime('%Y%m%d')
+    #p.article_views('{}.wikipedia'.format(lang), title, granularity='monthly', start='20160201', end=today)
+
+    my_dico= p.article_views('{}.wikipedia'.format(lang), links)
+    my_dico_by_article = {}
+    for article in links:
+        my_dico_by_article[article]=0
+
+    for key_date, sub_dico_value in my_dico.items():
+        for article,number in sub_dico_value.items():
+            if number is not None:
+                my_dico_by_article[article.replace('_',' ')] += number
+    my_dico_by_article = dict(sorted(my_dico_by_article.items(), key=operator.itemgetter(1), reverse=True))
+    #need to define a selection choose based on title approximation
+    return my_dico_by_article
+
+
+def get_graph_links(links):
+    G=nx.Graph()
+    G.add_nodes_from(links)
+    for article in links:
+        page= wikipedia.page(article)
+        links_tmp = page.links
+        G.add_nodes_from(links_tmp)
+        for article_tmp in links_tmp:
+            G.add_eges(article,article_tmp)
+
+    G=py2neo.Graph()
+
+    nodes = {}
+    nodes['Page'] = list({"title": c} for c in links)
+    node = "UNWIND {json} as data CREATE (n) SET n = data"
+    G.run(node, json=nodes['Page'])
+
+
 def construct_wiki_dico(wiki_dico_path, title_theme_list, init=False, find_links=False, max_article_links=100):
     #check if wiki dico exist or created
     if not os.path.isfile(wiki_dico_path):
@@ -236,8 +284,7 @@ def construct_wiki_dico(wiki_dico_path, title_theme_list, init=False, find_links
                     for word in e.options:
                         print(word)
                 if find_links:
-                    page_primary = wikipedia.page(pageid=pageid)
-                    links = page_primary.links
+                    get_linked_page(pageid)
                     dico_tmp = {key: 0 for key in links if key not in list(wiki_dico[theme])}
                     for key,value in dico_tmp.items():
                         if key in list(dico_tmp.keys()):

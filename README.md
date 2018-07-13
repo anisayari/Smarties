@@ -19,6 +19,9 @@ on a live system.
 ### Prerequisites
 
 You need to have python 3.+ install on your machine. 
+Please follow this link to install 
+- Pywikibot : https://www.mediawiki.org/wiki/Manual:Pywikibot/Installation
+- mwviews https://github.com/mediawiki-utilities/python-mwviews
 
 ### Installing
 ```
