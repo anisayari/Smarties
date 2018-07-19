@@ -249,7 +249,6 @@ def get_graph_links(links):
             G.add_eges(article,article_tmp)
 
     G=py2neo.Graph()
-
     nodes = {}
     nodes['Page'] = list({"title": c} for c in links)
     node = "UNWIND {json} as data CREATE (n) SET n = data"
