@@ -21,6 +21,8 @@ import datetime
 import operator
 import networkx as nx
 import py2neo
+import simplejson
+import csv
 
 mapping_file = 'mapping.json'
 lang='en'
@@ -48,7 +50,7 @@ def text_to_keyword_dataframe(text, class_labelized,
                               number_of_character_per_word_at_least,
                               number_of_words_at_most_per_phrase,
                               number_of_keywords_appears_in_the_text_at_least):
-    # print('Keyword Extraction by NLTK, In Progress...')
+    print('Keyword Extraction by NLTK, In Progress...')
     language = rever_dict(lang_dict)[lang]
     rake_object = rake.Rake(language, number_of_character_per_word_at_least, number_of_words_at_most_per_phrase, number_of_keywords_appears_in_the_text_at_least)
     keywords = rake_object.run(text)
@@ -74,7 +76,8 @@ def get_df_keyword_from_content(df, content_col, class_col,
                            number_of_words_at_most_per_phrase,
                            number_of_keywords_appears_in_the_text_at_least):
     df_k = pd.DataFrame()
-    for text in df.groupby([class_col])[content_col]:
+    group = df.groupby([class_col])[content_col]
+    for i,text in enumerate(group):
         #run keyword extraction for all text concatened
         class_labelized = text[0]
         full_text = ''.join(text[1])
@@ -83,6 +86,7 @@ def get_df_keyword_from_content(df, content_col, class_col,
                                                  number_of_words_at_most_per_phrase,
                                                  number_of_keywords_appears_in_the_text_at_least
                                                  )
+        print("Group \r{0}/{1}".format(i,group.size()))
         try:
             if df == None:
                 continue
@@ -132,6 +136,11 @@ def add_entry_to_json(wiki_dico_path, theme, pageid=0, title=''):
         json.dump(wiki_dico, fp)
     print("[INFO] {0} had been succesfully added to the knowledge base".format(title.replace('_', '')))
 
+def error_check(egg):
+    try:
+        return egg
+    except:
+        return ['']
 
 def up_wiki_dico(wiki_dico, max_article_links=None):
     print("[INFO] Start sort and sampling...")
@@ -177,7 +186,7 @@ def get_global_page_id_wiki_links_list(links):
     i = 1
     for link in links:
         wiki_dico__for_one_theme[link] = get_page_id(title=link)
-        print('[INFO] Getting links in progress... \r {0}/{1}'.format(i, len(links)), end='')
+        print('[INFO] Getting links in progress... \r {0}/{1}'.format(i, len(links)))
         i += 1
     return wiki_dico__for_one_theme
 
@@ -213,10 +222,47 @@ def get_page_id(title):
     return int(next(iter(data["pages"])))
 
 
-def get_linked_page(pageid):
+def get_sorted_linked_page(pageid):
+    '''
+
+    :param pageid:
+    :return: list of linked articles also back linked to our primary page
+    '''
     #TODO need to define a linked prediction ML Model
     page_primary = wikipedia.page(pageid=pageid)
     links = page_primary.links
+    p = wikipedia.page(pageid=pageid)
+    print('Primary page: {}'.format(p))
+    title = p.title
+    l = p.links
+    links_selected = []
+    result_list = []
+    for link in l:
+        try:
+            list_tmp = wikipedia.page(link).links
+            if title.lower() in [x.lower() for x in list_tmp]:
+                links_selected.append(link)
+                result = 'ACCEPTED'
+            else:
+                result = 'REJECTED'
+        except wikipedia.exceptions.DisambiguationError or wikipedia.exceptions.PageError or simplejson.errors.JSONDecodeError:
+            result = 'IGNORED'
+        print('[{}] {}'.format(result, link))
+        result_list.append((link, result))
+
+    print('---------------------\n[{} - {}] REDUCTION OF {}% \n---------------------'.format(pageid, title,
+                                                                                             str(round(1.0 -
+                                                                                                       (len(
+                                                                                                           links_selected) / len(
+                                                                                                           l))
+                                                                                                       , 1))
+                                                                                             ))
+    with open('{}_links.csv'.format(title), 'wb') as out:
+        csv_out = csv.writer(out)
+        csv_out.writerow(['name', 'num'])
+        for row in links_selected:
+            csv_out.writerow(row)
+    return links_selected
 
 def get_page_views_dict(links):
     p=PageviewsClient()
@@ -239,6 +285,7 @@ def get_page_views_dict(links):
 
 
 def get_graph_links(links):
+    #TODO Define a function to start a graph analysis to find related and relevant articles to a wikipedia page
     G=nx.Graph()
     G.add_nodes_from(links)
     for article in links:
@@ -255,7 +302,7 @@ def get_graph_links(links):
     G.run(node, json=nodes['Page'])
 
 
-def construct_wiki_dico(wiki_dico_path, title_theme_list, init=False, find_links=False, max_article_links=100):
+def construct_wiki_dico(wiki_dico_path, title_theme_list, init=False, find_links=False, max_article_links=None):
     #check if wiki dico exist or created
     if not os.path.isfile(wiki_dico_path):
         with open(wiki_dico_path, 'w') as fp:
@@ -272,7 +319,7 @@ def construct_wiki_dico(wiki_dico_path, title_theme_list, init=False, find_links
             wiki_dico[theme] = {}
         pageid = get_page_id(title)
         if pageid != 0:
-            # If page has been found
+            # If primary page has been found
             if pageid not in wiki_dico[theme]:
                 try:
                     add_entry_to_json(wiki_dico_path, theme=theme, pageid=pageid, title=title)
@@ -283,7 +330,7 @@ def construct_wiki_dico(wiki_dico_path, title_theme_list, init=False, find_links
                     for word in e.options:
                         print(word)
                 if find_links:
-                    get_linked_page(pageid)
+                    links = get_sorted_linked_page(pageid)
                     dico_tmp = {key: 0 for key in links if key not in list(wiki_dico[theme])}
                     for key,value in dico_tmp.items():
                         if key in list(dico_tmp.keys()):
@@ -429,9 +476,11 @@ def sort_keyword_from_database(df, number_of_character_per_word_at_least,
                                        number_of_character_per_word_at_least,
                            number_of_words_at_most_per_phrase,
                            number_of_keywords_appears_in_the_text_at_least)
-    for keyword_list in df_k.groupby(class_col)['KeyWord']:
+    group = df_k.groupby(class_col)['KeyWord']
+    for i,keyword_list in enumerate(group):
         class_labelized = keyword_list[0]
         keyword_list = keyword_list[1]
+        print("Group \r{0}/{1}".format(i,group.size()))
         for index, row in df.iterrows():
             find = False
             if row[class_col] == class_labelized:

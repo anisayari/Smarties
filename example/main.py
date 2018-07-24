@@ -1,4 +1,7 @@
+# coding: utf-8
+
 import Smarties as sm
+import time
 
 wiki_dico_path = "wiki_dico.json"
 
@@ -6,6 +9,7 @@ wiki_dico_path = "wiki_dico.json"
 
 
 if __name__ == '__main__':
+    start_time = time.time()
     sm.set_lang('english')
     title_theme_list = []
     title_theme_list.append(('Soccer', 'Soccer'))
@@ -26,3 +30,4 @@ if __name__ == '__main__':
 
     sentence_to_predict = "The French soccer team is perhaps one of the best team around the world."
     sm.predict(classifier, df, sentence_to_predict)
+    print("--- %s seconds ---" % (time.time() - start_time))

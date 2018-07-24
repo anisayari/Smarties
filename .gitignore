@@ -1,1 +1,5 @@
-"test.py" 
+test.py
+.github
+.idea/*
+dist/
+test/
