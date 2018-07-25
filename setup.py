@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(name='Smarties',
 
-      version='0.5',
+      version='0.11',
 
       url='https://github.com/anisayari/Smarties',
 
@@ -26,11 +26,20 @@ setup(name='Smarties',
           'scikit-learn',
           'pandas',
           'numpy',
+          'simplejson',
+          'msgpack',
+          'mwviews',
+          'py2neo'
       ],
       setup_requires=['nltk',
                       'gensim',
                       'wikipedia',
                       'scikit-learn',
                       'pandas',
-                      'numpy'],
+                      'numpy',
+                      'simplejson',
+                      'msgpack',
+                      'mwviews',
+                      'py2neo'
+                      ],
       test_suite='nose.collector')

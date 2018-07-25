@@ -1,14 +1,14 @@
-gensim==3.4.0
-imutils==0.4.6
-Markdown==2.6.11
-nltk==3.3
-numpy==1.14.5
-pandas==0.23.1
-Pillow==5.1.0
-tensorflow==1.8.0
-tensorflow-gpu==1.8.0
-urllib3==1.23
-wikipedia==1.4.0
+gensim
+imutils
+Markdown
+nltk
+numpy
+pandas
+Pillow
+tensorflow
+tensorflow-gpu
+urllib3
+wikipedia
 scikit-learn
 networkx
 

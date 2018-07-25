@@ -234,10 +234,10 @@ def get_sorted_linked_page(pageid):
     p = wikipedia.page(pageid=pageid)
     print('Primary page: {}'.format(p))
     title = p.title
-    l = p.links
+    primary_links = p.links
     links_selected = []
     result_list = []
-    for link in l:
+    for link in primary_links:
         try:
             list_tmp = wikipedia.page(link).links
             if title.lower() in [x.lower() for x in list_tmp]:
@@ -245,7 +245,7 @@ def get_sorted_linked_page(pageid):
                 result = 'ACCEPTED'
             else:
                 result = 'REJECTED'
-        except wikipedia.exceptions.DisambiguationError or wikipedia.exceptions.PageError or simplejson.errors.JSONDecodeError:
+        except:
             result = 'IGNORED'
         print('[{}] {}'.format(result, link))
         result_list.append((link, result))
@@ -254,7 +254,7 @@ def get_sorted_linked_page(pageid):
                                                                                              str(round(1.0 -
                                                                                                        (len(
                                                                                                            links_selected) / len(
-                                                                                                           l))
+                                                                                                           primary_links))
                                                                                                        , 1))
                                                                                              ))
     with open('{}_links.csv'.format(title), 'wb') as out:
@@ -269,7 +269,6 @@ def get_page_views_dict(links):
     #today = datetime.datetime.today()
     #today = today.strftime('%Y%m%d')
     #p.article_views('{}.wikipedia'.format(lang), title, granularity='monthly', start='20160201', end=today)
-
     my_dico= p.article_views('{}.wikipedia'.format(lang), links)
     my_dico_by_article = {}
     for article in links:
