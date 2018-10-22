@@ -23,6 +23,8 @@ import networkx as nx
 import py2neo
 import simplejson
 import csv
+import nltk
+nltk.download('stopwords')
 
 mapping_file = 'mapping.json'
 lang='en'
@@ -229,6 +231,7 @@ def get_sorted_linked_page(pageid):
     :return: list of linked articles also back linked to our primary page
     '''
     #TODO need to define a linked prediction ML Model
+
     page_primary = wikipedia.page(pageid=pageid)
     links = page_primary.links
     p = wikipedia.page(pageid=pageid)
@@ -257,10 +260,11 @@ def get_sorted_linked_page(pageid):
                                                                                                            primary_links))
                                                                                                        , 1))
                                                                                              ))
-    with open('{}_links.csv'.format(title), 'wb') as out:
+    title = title.replace(' ','_')
+    with open('{}_links.csv'.format(title), 'w') as out:
         csv_out = csv.writer(out)
         csv_out.writerow(['name', 'num'])
-        for row in links_selected:
+        for row in result_list:
             csv_out.writerow(row)
     return links_selected
 
@@ -311,8 +315,10 @@ def construct_wiki_dico(wiki_dico_path, title_theme_list, init=False, find_links
     json_file = open(wiki_dico_path)
     json_str = json_file.read()
     wiki_dico = json.loads(json_str)
+    print(title_theme_list)
 
     for title,theme in title_theme_list:
+        print(title,theme)
         #create sublist of wikipedia links sampled
         if theme not in list(wiki_dico.keys()):
             wiki_dico[theme] = {}
@@ -343,8 +349,8 @@ def construct_wiki_dico(wiki_dico_path, title_theme_list, init=False, find_links
         else:
             suggest = wikipedia.suggest(title)  # else try to reach a suggestion page
             if suggest is not None:
-                print('[INFO] Title {} of the theme {} had not been found, try to reach: !'.format(title, theme, suggest))
-                construct_wiki_dico(wiki_dico_path, (suggest, theme))
+                print('[INFO] Title {} of the theme {} had not been found, try to reach: {} !'.format(title, theme, suggest))
+                construct_wiki_dico(wiki_dico_path, [(suggest, theme)])
             else:
                 print(
                     '[ERROR] I\'m sorry, but I Cannot find any article or suggestions for %s in the theme, please try again'.format(
@@ -354,15 +360,15 @@ def construct_wiki_dico(wiki_dico_path, title_theme_list, init=False, find_links
     wiki_dico = up_wiki_dico(wiki_dico, max_article_links)
 
     if find_links:
-        for title, theme in title_theme_list:
-            print('\n[INFO] Getting Wikipedia links for {}'.format(theme))
-            wiki_dico[theme] = get_global_page_id_wiki_links_list(wiki_dico[theme])
+        for title_, theme_ in title_theme_list:
+            print('\n[INFO] Getting Wikipedia links for {}'.format(theme_))
+            wiki_dico[theme_] = get_global_page_id_wiki_links_list(wiki_dico[theme_])
 
     if init:
         with open(wiki_dico_path, 'w') as fp:
             json.dump(wiki_dico, fp)
     else:
-        for theme, dico in wiki_dico.items():
+        for theme_, dico in wiki_dico.items():
             for title, pageid in dico.items():
                 add_entry_to_json(wiki_dico_path, theme, pageid=pageid, title=title)
 
