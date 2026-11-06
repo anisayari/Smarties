@@ -1,0 +1,149 @@
+{
+  "python": "3.12.15",
+  "os": "Windows",
+  "os_version": "10.0.28000",
+  "host_reported_machine": "ARM64",
+  "python_platform": "win-amd64",
+  "versions": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "gensim": "4.4.0",
+    "model2vec": "0.10.0",
+    "tokenizers": "0.23.3"
+  },
+  "thread_settings": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "TOKENIZERS_PARALLELISM": "false"
+  },
+  "threadpoolctl_limit": 1,
+  "doc2vec_workers": 1,
+  "forest_n_jobs": 1,
+  "seed": 42,
+  "datasets": {
+    "sports": {
+      "sha256": "d24ccdccaf2ed5ce91a12bbd51db97248ee05a2a528a7937861a1358437a3385",
+      "source_rows": 28
+    },
+    "newsgroups": {
+      "sha256": "2972bfe1f5c87d437a5dbcdec9bc65a89f12325016b9615f29a93c6856eff0a0",
+      "train": {
+        "source_rows": 11314,
+        "empty": 310,
+        "duplicate": 43,
+        "used_class_counts": {
+          "alt.atheism": 100,
+          "comp.graphics": 100,
+          "comp.os.ms-windows.misc": 100,
+          "comp.sys.ibm.pc.hardware": 100,
+          "comp.sys.mac.hardware": 100,
+          "comp.windows.x": 100,
+          "misc.forsale": 100,
+          "rec.autos": 100,
+          "rec.motorcycles": 100,
+          "rec.sport.baseball": 100,
+          "rec.sport.hockey": 100,
+          "sci.crypt": 100,
+          "sci.electronics": 100,
+          "sci.med": 100,
+          "sci.space": 100,
+          "soc.religion.christian": 100,
+          "talk.politics.guns": 100,
+          "talk.politics.mideast": 100,
+          "talk.politics.misc": 100,
+          "talk.religion.misc": 100
+        }
+      },
+      "test": {
+        "source_rows": 7532,
+        "empty": 223,
+        "duplicate": 29,
+        "used_class_counts": {
+          "alt.atheism": 50,
+          "comp.graphics": 50,
+          "comp.os.ms-windows.misc": 50,
+          "comp.sys.ibm.pc.hardware": 50,
+          "comp.sys.mac.hardware": 50,
+          "comp.windows.x": 50,
+          "misc.forsale": 50,
+          "rec.autos": 50,
+          "rec.motorcycles": 50,
+          "rec.sport.baseball": 50,
+          "rec.sport.hockey": 50,
+          "sci.crypt": 50,
+          "sci.electronics": 50,
+          "sci.med": 50,
+          "sci.space": 50,
+          "soc.religion.christian": 50,
+          "talk.politics.guns": 50,
+          "talk.politics.mideast": 50,
+          "talk.politics.misc": 50,
+          "talk.religion.misc": 50
+        }
+      }
+    },
+    "newsgroups_full": {
+      "sha256": "438d6121af6f433aff47fa9c878997073cd0c9c2c948295bf07686d04b63b4bf",
+      "train": {
+        "source_rows": 11314,
+        "empty": 310,
+        "duplicate": 43,
+        "used_class_counts": {
+          "alt.atheism": 467,
+          "comp.graphics": 568,
+          "comp.os.ms-windows.misc": 561,
+          "comp.sys.ibm.pc.hardware": 578,
+          "comp.sys.mac.hardware": 556,
+          "comp.windows.x": 578,
+          "misc.forsale": 571,
+          "rec.autos": 560,
+          "rec.motorcycles": 581,
+          "rec.sport.baseball": 575,
+          "rec.sport.hockey": 584,
+          "sci.crypt": 582,
+          "sci.electronics": 570,
+          "sci.med": 576,
+          "sci.space": 576,
+          "soc.religion.christian": 590,
+          "talk.politics.guns": 532,
+          "talk.politics.mideast": 544,
+          "talk.politics.misc": 452,
+          "talk.religion.misc": 360
+        }
+      },
+      "test": {
+        "source_rows": 7532,
+        "empty": 223,
+        "duplicate": 29,
+        "used_class_counts": {
+          "alt.atheism": 311,
+          "comp.graphics": 383,
+          "comp.os.ms-windows.misc": 378,
+          "comp.sys.ibm.pc.hardware": 382,
+          "comp.sys.mac.hardware": 371,
+          "comp.windows.x": 381,
+          "misc.forsale": 371,
+          "rec.autos": 374,
+          "rec.motorcycles": 386,
+          "rec.sport.baseball": 381,
+          "rec.sport.hockey": 390,
+          "sci.crypt": 380,
+          "sci.electronics": 382,
+          "sci.med": 380,
+          "sci.space": 376,
+          "soc.religion.christian": 384,
+          "talk.politics.guns": 353,
+          "talk.politics.mideast": 370,
+          "talk.politics.misc": 303,
+          "talk.religion.misc": 244
+        }
+      }
+    }
+  },
+  "encoder_sha256": {
+    "config.json": "2a6ac0e9aaa356a68a5688070db78fc3a464fefe85d2f06a1905ce3718687553",
+    "tokenizer.json": "e67e803f624fb4d67dea1c730d06e1067e1b14d830e2c2202569e3ef0f70bb50",
+    "model.safetensors": "f65d0f325faadc1e121c319e2faa41170d3fa07d8c89abd48ca5358d9a223de2"
+  }
+}

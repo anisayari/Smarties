@@ -1,0 +1,12 @@
+# Numerical and encoder stack used for the published CPython 3.12 results.
+numpy==2.5.4
+scipy==1.18.1
+scikit-learn==1.9.1
+gensim==4.4.0
+model2vec==0.10.0
+tokenizers==0.23.3
+threadpoolctl==3.8.0
+huggingface-hub==2.4.0
+smart-open==9.0.2
+safetensors==0.8.0
+joblib==1.6.0
