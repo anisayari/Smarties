@@ -1,541 +1,577 @@
-# coding: utf-8
+"""Compatibility functions for Smarties' original Wikipedia and DataFrame workflow."""
 
-import pandas as pd
-import re
-import wikipedia
-from sklearn import preprocessing
-import json
-import numpy as np
-from gensim.models.doc2vec import LabeledSentence
-from gensim.models import Doc2Vec
-# from nltk.stem.wordnet import WordNetLemmatizer
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import GridSearchCV
-from sklearn.ensemble import RandomForestClassifier as RFC
-from . import rake
-import urllib
-import os
-import random
-from mwviews.api import PageviewsClient
-import datetime
-import operator
-import networkx as nx
-import py2neo
-import simplejson
+from collections import Counter
+from contextlib import contextmanager
 import csv
-import nltk
-nltk.download('stopwords')
+from dataclasses import dataclass
+from functools import cached_property
+import json
+from numbers import Integral
+import os
+from pathlib import Path
+import re
+from tempfile import NamedTemporaryFile
+from urllib.parse import quote_plus, urlencode
+from urllib.request import Request, urlopen
 
-mapping_file = 'mapping.json'
-lang='en'
-lang_dict={
-	"arabic" : "ar",
-	"danish" : "da",
-	"german" : "de",
-    "english" : "en",
-	"spanish" : "es",
-	"french" : "fr",
-    "indonesian" : "id",
-    "italian" : "it",
-	"japanese" : "ja",
-	"dutch" : "nl",
-	"portuguese" : "pt",
-	"brasilian" : "pt-br",
-	"romanian" : "ro",
-	"russian" : "ru",
+from . import rake
+from .classifier import TextClassifier
+
+mapping_file = "mapping.json"
+lang = "en"
+lang_dict = {
+    "arabic": "ar", "danish": "da", "german": "de", "english": "en",
+    "spanish": "es", "french": "fr", "indonesian": "id", "italian": "it",
+    "japanese": "ja", "dutch": "nl", "portuguese": "pt", "brasilian": "pt",
+    "romanian": "ro", "russian": "ru",
 }
 
+__all__ = [
+    "mapping_file", "lang", "lang_dict", "rake",
+    "rever_dict", "text_to_keyword_dataframe", "get_df_keyword_from_content",
+    "sampling_class", "split_content", "add_entry_to_json", "error_check", "up_wiki_dico",
+    "get_global_page_id_wiki_links_list", "set_lang", "get_page", "get_page_id",
+    "get_sorted_linked_page", "get_page_views_dict", "get_graph_links", "construct_wiki_dico",
+    "clean_wiki_page", "default", "construct_database_from_knwoledge_base",
+    "construct_database_from_knowledge_base",
+    "label_sentences", "train_doc2vec_model", "vectorize_comments", "train_classifier",
+    "import_database", "sort_keyword_from_database", "model_from_database", "predict",
+]
+
+
 def rever_dict(my_dict):
-    return {v: k for k, v in my_dict.items()}
+    return {value: key for key, value in my_dict.items()}
+
+
+@contextmanager
+def _atomic_output(path):
+    path = Path(path)
+    with NamedTemporaryFile(
+        mode="w", encoding="utf-8", newline="", dir=path.parent, delete=False
+    ) as output:
+        temporary = Path(output.name)
+        try:
+            yield output
+            output.close()
+            os.replace(temporary, path)
+        finally:
+            output.close()
+            temporary.unlink(missing_ok=True)
+
+
+def _read_json(path):
+    with open(path, encoding="utf-8") as source:
+        return json.load(source)
+
+
+def _write_json(path, value):
+    with _atomic_output(path) as output:
+        json.dump(value, output, ensure_ascii=False, indent=2, default=default)
+        output.write("\n")
+
 
 def text_to_keyword_dataframe(text, class_labelized,
                               number_of_character_per_word_at_least,
                               number_of_words_at_most_per_phrase,
-                              number_of_keywords_appears_in_the_text_at_least):
-    print('Keyword Extraction by NLTK, In Progress...')
-    language = rever_dict(lang_dict)[lang]
-    rake_object = rake.Rake(language, number_of_character_per_word_at_least, number_of_words_at_most_per_phrase, number_of_keywords_appears_in_the_text_at_least)
-    keywords = rake_object.run(text)
-    if len(keywords) == 0:
-        print(
-            '{ERROR] Hum no keyword find... Review your settings. Or I cannot understand this document sorry')
-        return None,None
-    # remove words with \
-    keywords = [i for i in keywords if "\\" not in keywords[0]]
-    if len(keywords) == 0:
-        raise ValueError('[ERROR] Hum no keyword find for all article, please review your seetings')
-    df = pd.DataFrame(keywords)
-    df.pivot(columns=0, values=1)
-    df.columns = ['KeyWord', "Score"]
-    df["class_labelized"] = int(class_labelized)
-    df.Score = df.Score.round(2)
-    # print(df)
-    return df, keywords
+                              number_of_keywords_appears_in_the_text_at_least,
+                              *, stop_words=None):
+    import pandas as pd
+
+    extractor = rake.Rake(lang, number_of_character_per_word_at_least,
+                          number_of_words_at_most_per_phrase,
+                          number_of_keywords_appears_in_the_text_at_least,
+                          stop_words=stop_words)
+    keywords = [(word, score) for word, score in extractor.run(text) if "\\" not in word]
+    if not keywords:
+        return None, None
+    result = pd.DataFrame(keywords, columns=["KeyWord", "Score"])
+    result["Score"] = result["Score"].round(2)
+    result["class_labelized"] = class_labelized
+    return result, keywords
+
+
+def _label_names(df, class_col):
+    if "Class" in df and class_col in df:
+        return dict(zip(df[class_col], df["Class"]))
+    if "smarties_label_names" in df.attrs:
+        return df.attrs["smarties_label_names"]
+    if Path(mapping_file).is_file():
+        return rever_dict(_read_json(mapping_file))
+    return {}
 
 
 def get_df_keyword_from_content(df, content_col, class_col,
                                 number_of_character_per_word_at_least,
-                           number_of_words_at_most_per_phrase,
-                           number_of_keywords_appears_in_the_text_at_least):
-    df_k = pd.DataFrame()
-    group = df.groupby([class_col])[content_col]
-    for i,text in enumerate(group):
-        #run keyword extraction for all text concatened
-        class_labelized = text[0]
-        full_text = ''.join(text[1])
-        df, keywords = text_to_keyword_dataframe(full_text, class_labelized,
-                                                 number_of_character_per_word_at_least,
-                                                 number_of_words_at_most_per_phrase,
-                                                 number_of_keywords_appears_in_the_text_at_least
-                                                 )
-        print("Group \r{0}/{1}".format(i,group.size()))
-        try:
-            if df == None:
-                continue
-        except TypeError:
-            pass
-        df_k = df_k.append(df)
-    # replace value labelized with mapped value from mapping file
-    if df_k.shape[0]==0:
-        raise TypeError('No keyword found, please check your settings')
-    json_file = open(mapping_file)
-    json_str = json_file.read()
-    mapping_dico = json.loads(json_str)
-    inv_map = {v: k for k, v in mapping_dico.items()}
-    df_k["class"] = df_k['class_labelized']
-    df_k['class'].replace(inv_map,inplace=True)
-    df_k.to_csv("keywords_database.csv".format(content_col), sep=";", index=False)
-    return df_k
+                                number_of_words_at_most_per_phrase,
+                                number_of_keywords_appears_in_the_text_at_least,
+                                *, stop_words=None):
+    import pandas as pd
+
+    frames = []
+    for label, articles in df.groupby(class_col, sort=False)[content_col]:
+        result, _ = text_to_keyword_dataframe(
+            ". ".join(articles.dropna()), label, number_of_character_per_word_at_least,
+            number_of_words_at_most_per_phrase, number_of_keywords_appears_in_the_text_at_least,
+            stop_words=stop_words,
+        )
+        if result is not None:
+            frames.append(result)
+    if not frames:
+        raise ValueError("No keywords found. Try a lower frequency or shorter minimum length.")
+    keywords = pd.concat(frames, ignore_index=True)
+    names = _label_names(df, class_col)
+    keywords["class"] = [names.get(label, label) for label in keywords["class_labelized"]]
+    with _atomic_output("keywords_database.csv") as output:
+        keywords.to_csv(output, sep=";", index=False)
+    return keywords
 
 
 def sampling_class(df, class_col):
-    df_tmp = pd.DataFrame()
-    len_min = min(df[class_col].value_counts().tolist())
-    for c in df[class_col].unique():
-        df_tmp = df_tmp.append(df[df[class_col] == c].sample(len_min), ignore_index=True)
-    return df_tmp
+    if df.empty:
+        return df.copy()
+    groups = df.groupby(class_col, sort=False)
+    return groups.sample(n=int(groups.size().min()), random_state=42).reset_index(drop=True)
 
 
 def split_content(df, content_col, class_col):
-    # split each document by sentences
-    # TODO need to be defined
-    df = pd.concat([pd.Series(row[class_col], row[content_col].split('.'))
-                    for _, row in df.iterrows()]).reset_index()
-    df.columns = [content_col, class_col]
-    return df
+    """Split article text for legacy callers. Split train/test by article before calling this."""
+    result = df[[content_col, class_col]].copy()
+    result[content_col] = result[content_col].str.split(r"[.!?]+")
+    result = result.explode(content_col, ignore_index=True)
+    result[content_col] = result[content_col].str.strip()
+    return result.loc[result[content_col].notna() & result[content_col].ne("")].reset_index(drop=True)
 
 
-def add_entry_to_json(wiki_dico_path, theme, pageid=0, title=''):
-    json_file = open(wiki_dico_path)
-    json_str = json_file.read()
-    wiki_dico = json.loads(json_str)
-    if theme not in wiki_dico:
-        wiki_dico[theme] = {}
+def add_entry_to_json(wiki_dico_path, theme, pageid=0, title=""):
+    path = Path(wiki_dico_path)
+    knowledge = _read_json(path) if path.exists() else {}
+    articles = knowledge.setdefault(theme, {})
     if pageid:
-        title = title.replace(" ", "_")
-        wiki_dico[theme].update(({title: int(pageid)}))
-    with open(wiki_dico_path, 'w') as fp:
-        json.dump(wiki_dico, fp)
-    print("[INFO] {0} had been succesfully added to the knowledge base".format(title.replace('_', '')))
+        articles[title.replace(" ", "_")] = int(pageid)
+    _write_json(path, knowledge)
+
 
 def error_check(egg):
-    try:
-        return egg
-    except:
-        return ['']
+    return egg
 
-def up_wiki_dico(wiki_dico, max_article_links=None):
-    print("[INFO] Start sort and sampling...")
-    # Remove common content and sampling
-    theme_list = list(wiki_dico.keys())
-    intersection_list = []
-    for i in range(0, len(theme_list) - 1):
-        for j in range(i + 1, len(theme_list)):
-            intersection_list += list(
-                set(list(wiki_dico[theme_list[i]].keys()))
-                    .intersection(
-                    list(wiki_dico[theme_list[j]].keys())
-                )
-            )
-    #remove intersection + random sampling
-    for key, values in wiki_dico.items():
-        list_of_key_without_current_key = list(wiki_dico.keys())
-        list_of_key_without_current_key.remove(key)
-        if max_article_links != None:
-            list_to_check = list(set(values)-set(intersection_list))
-            if len(list_to_check)> max_article_links:
-                key_random = list(random.sample(list_to_check, max_article_links))
+
+def _title_key(title):
+    normalized = " ".join(title.replace("_", " ").split())
+    return normalized[:1].upper() + normalized[1:]
+
+
+def _article_key(title, pageid):
+    numeric_id = int(pageid or 0)
+    return numeric_id if numeric_id > 0 else _title_key(title)
+
+
+def up_wiki_dico(wiki_dico, max_article_links=None, *, seed_titles=None, previous_seeds=None):
+    """Keep explicit seeds and up to N unique, single-theme related articles per theme."""
+    if max_article_links is not None and (
+        not isinstance(max_article_links, Integral) or max_article_links < 0
+    ):
+        raise ValueError("max_article_links must be a nonnegative integer")
+    seed_titles = seed_titles or {}
+    previous_seeds = previous_seeds or {}
+    candidates = {}
+    occurrences = Counter()
+    seed_owner = {}
+    for theme, articles in wiki_dico.items():
+        explicit = seed_titles.get(theme, ())
+        seed_names = {_title_key(theme), *(_title_key(title) for title in explicit)}
+        by_id = {}
+        for title, pageid in articles.items():
+            identity = _article_key(title, pageid)
+            # A caller-supplied name wins over old spellings and redirect aliases.
+            if title in explicit:
+                priority = 0
+            elif _title_key(title) in seed_names:
+                priority = 1
+            elif previous_seeds.get(theme) == title:
+                priority = 2
             else:
-                print('{} not enough article to be sampled'.format(key))
-                key_random=list_to_check
-            wiki_dico[key] = {k: v for k, v in values.items() if (
-                        k not in intersection_list and k in key_random and k not in list_of_key_without_current_key) or (
-                                          k == key)}
-        else:
-            wiki_dico[key] = {k: v for k, v in values.items() if (
-                        k not in intersection_list and k not in list_of_key_without_current_key) or (
-                                          k == key)}
+                priority = 3
+            item = (priority, title, pageid)
+            if identity not in by_id or item[:2] < by_id[identity][:2]:
+                by_id[identity] = item
+            if priority < 2:
+                owner = seed_owner.setdefault(identity, theme)
+                if owner != theme:
+                    raise ValueError(f"Wikipedia article {identity!r} is a seed for both {owner!r} and {theme!r}")
+        occurrences.update(by_id.keys())
+        candidates[theme] = by_id
 
-        #if a title of a class links is not in a list of links of an other class
-        #and title is one of the sampling obtained and title
-
-    print("[INFO] Sort and sampling done")
+    for theme, by_id in candidates.items():
+        seeds, links = {}, []
+        for identity, (priority, title, pageid) in by_id.items():
+            if identity in seed_owner:
+                if seed_owner[identity] == theme:
+                    seeds[title] = pageid
+            elif occurrences[identity] == 1:
+                if priority == 2:
+                    seeds[title] = pageid
+                else:
+                    links.append((title, pageid))
+        wiki_dico[theme] = {**seeds, **dict(sorted(links)[:max_article_links])}
     return wiki_dico
 
 
-def get_global_page_id_wiki_links_list(links):
-    wiki_dico__for_one_theme = {}
-    i = 1
-    for link in links:
-        wiki_dico__for_one_theme[link] = get_page_id(title=link)
-        print('[INFO] Getting links in progress... \r {0}/{1}'.format(i, len(links)))
-        i += 1
-    return wiki_dico__for_one_theme
-
-def set_lang(lg='english'):
-    lg = lg.lower()
-    if lg not in list(lang_dict.keys()):
-        print('Language supported:')
-        print(list(lang_dict.keys()))
-        raise NotImplemented('{} is not a language supported'.format(lg))
+def set_lang(lg="english"):
+    """Select a Wikipedia language by historical name or ISO language code."""
     global lang
-    lang = lang_dict[lg]
-    wikipedia.set_lang(lang)
+    name = lg.casefold()
+    code = lang_dict.get(name, name)
+    if code not in lang_dict.values():
+        raise ValueError(f"Unsupported language {lg!r}. Choose one of {', '.join(lang_dict)}.")
+    lang = code
 
-def get_page(page):
-    return wikipedia.page(page)
+
+def _wiki_query(language, **params):
+    query = urlencode({"action": "query", "format": "json", "formatversion": 2,
+                       "redirects": 1, "maxlag": 5, **params})
+    request = Request(f"https://{language}.wikipedia.org/w/api.php?{query}",
+                      headers={"User-Agent": "Smarties (https://github.com/anisayari/Smarties)"})
+    with urlopen(request, timeout=20) as response:
+        data = json.load(response)
+    if "error" in data:
+        raise RuntimeError(f"MediaWiki query failed: {data['error']}")
+    return data
+
+
+def _wiki_pages(language, **params):
+    continuation = {}
+    while True:
+        response = _wiki_query(language, **params, **continuation)
+        yield from response["query"]["pages"]
+        continuation = response.get("continue")
+        if not continuation:
+            break
+
+
+def _page_record(language, **params):
+    page = next(_wiki_pages(language, **params))
+    if "missing" in page or "invalid" in page or "disambiguation" in page.get("pageprops", {}):
+        raise LookupError(f"Missing or ambiguous Wikipedia article: {page.get('title')}")
+    return page
+
+
+@dataclass
+class _WikipediaPage:
+    title: str
+    pageid: int
+    url: str
+    language: str
+
+    @cached_property
+    def content(self):
+        record = _page_record(self.language, pageids=self.pageid, prop="extracts", explaintext=1)
+        return record.get("extract", "")
+
+    @cached_property
+    def summary(self):
+        record = _page_record(self.language, pageids=self.pageid, prop="extracts", explaintext=1, exintro=1)
+        return record.get("extract", "")
+
+    @cached_property
+    def links(self):
+        pages = _wiki_pages(self.language, pageids=self.pageid, prop="links", plnamespace=0, pllimit="max")
+        return [entry["title"] for page in pages for entry in page.get("links", [])]
+
+
+def get_page(page=None, *, pageid=None):
+    if (page is None) == (pageid is None):
+        raise ValueError("Supply either a Wikipedia title or a pageid")
+    identifier = {"pageids": pageid} if pageid is not None else {"titles": page}
+    language = lang
+    record = _page_record(language, prop="info|pageprops", ppprop="disambiguation",
+                          inprop="url", **identifier)
+    return _WikipediaPage(record["title"], record["pageid"], record["fullurl"], language)
+
+
+def _title_batches(titles):
+    # Wikimedia limits page counts, and HTTP proxies can reject very long URLs.
+    batch = []
+    size = 0
+    for title in titles:
+        if "|" in title:
+            raise ValueError("Wikipedia article titles cannot contain a pipe")
+        encoded_size = len(quote_plus(title)) + 3
+        if batch and (len(batch) >= 40 or size + encoded_size > 5000):
+            yield batch
+            batch, size = [], 0
+        batch.append(title)
+        size += encoded_size
+    if batch:
+        yield batch
+
+
+def _resolved_titles(titles, *, language, **params):
+    """Fetch up to 40 titles at a time and map normalized names and redirects back to inputs."""
+    for batch in _title_batches(titles):
+        data = _wiki_query(language, titles="|".join(batch), **params)
+        query = data["query"]
+        aliases = {item["from"]: item["to"] for key in ("normalized", "redirects")
+                   for item in query.get(key, [])}
+        pages = {record["title"]: record for record in query["pages"]}
+        for title in batch:
+            normalized = title
+            seen = set()
+            while normalized in aliases and normalized not in seen:
+                seen.add(normalized)
+                normalized = aliases[normalized]
+            yield title, pages.get(normalized, {})
+
+
+def get_global_page_id_wiki_links_list(links):
+    pages = _resolved_titles(links, language=lang, prop="pageprops", ppprop="disambiguation")
+    return {title: record.get("pageid", 0) if "disambiguation" not in record.get("pageprops", {})
+            else 0 for title, record in pages}
+
 
 def get_page_id(title):
-    parameters = {'action': 'query',
-                  'prop': 'revisions',
-                  'titles': urllib.parse.quote(title.encode("utf8")),
-                  'rvprop': 'content',
-                  'format': 'json'}
-    queryString = "&".join("%s=%s" % (k, v) for k, v in parameters.items())
-    queryString = queryString + "&redirects"
-    url = "http://%s.wikipedia.org/w/api.php?%s" % (lang, queryString)
-    request = urllib.request.urlopen(url)
-    encoding = request.headers.get_content_charset()
-    jsonData = request.read().decode(encoding)
-    data = json.loads(jsonData)
-    data = data["query"]
-    if next(iter(data["pages"])) == "-1":
-        return 0
-    return int(next(iter(data["pages"])))
+    return get_global_page_id_wiki_links_list([title])[title]
 
 
 def get_sorted_linked_page(pageid):
-    '''
-
-    :param pageid:
-    :return: list of linked articles also back linked to our primary page
-    '''
-    #TODO need to define a linked prediction ML Model
-
-    page_primary = wikipedia.page(pageid=pageid)
-    links = page_primary.links
-    p = wikipedia.page(pageid=pageid)
-    print('Primary page: {}'.format(p))
-    title = p.title
-    primary_links = p.links
-    links_selected = []
-    result_list = []
-    for link in primary_links:
-        try:
-            list_tmp = wikipedia.page(link).links
-            if title.lower() in [x.lower() for x in list_tmp]:
-                links_selected.append(link)
-                result = 'ACCEPTED'
+    page = get_page(pageid=pageid)
+    candidates = _resolved_titles(page.links, language=page.language, prop="links",
+                                  pltitles=page.title, pllimit="max", plnamespace=0)
+    accepted = []
+    # Wiki titles can include slashes or Windows device names. Keep the audit CSV in cwd.
+    basename = re.sub(r"[^\w-]+", "_", page.title)[:60]
+    with _atomic_output(f"{basename}_links.csv") as output:
+        writer = csv.writer(output)
+        writer.writerow(["name", "num"])
+        for title, record in candidates:
+            if record.get("links"):
+                accepted.append(title)
+                status = "ACCEPTED"
             else:
-                result = 'REJECTED'
-        except:
-            result = 'IGNORED'
-        print('[{}] {}'.format(result, link))
-        result_list.append((link, result))
+                status = "IGNORED" if "pageid" not in record else "REJECTED"
+            writer.writerow([title, status])
+    return accepted
 
-    print('---------------------\n[{} - {}] REDUCTION OF {}% \n---------------------'.format(pageid, title,
-                                                                                             str(round(1.0 -
-                                                                                                       (len(
-                                                                                                           links_selected) / len(
-                                                                                                           primary_links))
-                                                                                                       , 1))
-                                                                                             ))
-    title = title.replace(' ','_')
-    with open('{}_links.csv'.format(title), 'w') as out:
-        csv_out = csv.writer(out)
-        csv_out.writerow(['name', 'num'])
-        for row in result_list:
-            csv_out.writerow(row)
-    return links_selected
 
 def get_page_views_dict(links):
-    p=PageviewsClient()
-    #today = datetime.datetime.today()
-    #today = today.strftime('%Y%m%d')
-    #p.article_views('{}.wikipedia'.format(lang), title, granularity='monthly', start='20160201', end=today)
-    my_dico= p.article_views('{}.wikipedia'.format(lang), links)
-    my_dico_by_article = {}
-    for article in links:
-        my_dico_by_article[article]=0
+    from mwviews.api import PageviewsClient
 
-    for key_date, sub_dico_value in my_dico.items():
-        for article,number in sub_dico_value.items():
-            if number is not None:
-                my_dico_by_article[article.replace('_',' ')] += number
-    my_dico_by_article = dict(sorted(my_dico_by_article.items(), key=operator.itemgetter(1), reverse=True))
-    #need to define a selection choose based on title approximation
-    return my_dico_by_article
+    titles = list(links)
+    totals = {title: 0 for title in titles}
+    if titles:
+        client = PageviewsClient(user_agent="Smarties (https://github.com/anisayari/Smarties)", parallelism=1)
+        counts = client.article_views(f"{lang}.wikipedia", titles)
+        for day in counts.values():
+            for title in titles:
+                totals[title] += day.get(title.replace(" ", "_")) or day.get(title) or 0
+    return dict(sorted(totals.items(), key=lambda pair: pair[1], reverse=True))
 
 
 def get_graph_links(links):
-    #TODO Define a function to start a graph analysis to find related and relevant articles to a wikipedia page
-    G=nx.Graph()
-    G.add_nodes_from(links)
-    for article in links:
-        page= wikipedia.page(article)
-        links_tmp = page.links
-        G.add_nodes_from(links_tmp)
-        for article_tmp in links_tmp:
-            G.add_eges(article,article_tmp)
+    """Build and return a NetworkX graph in memory."""
+    import networkx as nx
 
-    G=py2neo.Graph()
-    nodes = {}
-    nodes['Page'] = list({"title": c} for c in links)
-    node = "UNWIND {json} as data CREATE (n) SET n = data"
-    G.run(node, json=nodes['Page'])
+    graph = nx.Graph()
+    for title in links:
+        graph.add_node(title)
+        graph.add_edges_from((title, linked) for linked in get_page(title).links)
+    return graph
 
 
 def construct_wiki_dico(wiki_dico_path, title_theme_list, init=False, find_links=False, max_article_links=None):
-    #check if wiki dico exist or created
-    if not os.path.isfile(wiki_dico_path):
-        with open(wiki_dico_path, 'w') as fp:
-            json.dump({}, fp)
-        print(wiki_dico_path + ' Succesfully created')
-    #load it
-    json_file = open(wiki_dico_path)
-    json_str = json_file.read()
-    wiki_dico = json.loads(json_str)
-    print(title_theme_list)
-
-    for title,theme in title_theme_list:
-        print(title,theme)
-        #create sublist of wikipedia links sampled
-        if theme not in list(wiki_dico.keys()):
-            wiki_dico[theme] = {}
+    """Merge or rebuild the specified themes, then clean and cap the resulting knowledge base."""
+    path = Path(wiki_dico_path)
+    existing = _read_json(path) if path.exists() else {}
+    title_theme_list = list(title_theme_list)
+    rebuilding = {theme for _, theme in title_theme_list} if init else set()
+    knowledge = {theme: dict(articles) for theme, articles in existing.items() if theme not in rebuilding}
+    # The old format only stores title -> ID. Our writer puts seeds first. Use the
+    # first article as a fallback only when there is no title matching the theme;
+    # a shared article must never acquire a class solely from this inference.
+    previous_seeds = {
+        theme: next(iter(articles)) for theme, articles in knowledge.items()
+        if articles and not any(_title_key(title) == _title_key(theme) for title in articles)
+    }
+    seeds = {}
+    for title, theme in title_theme_list:
+        articles = knowledge.setdefault(theme, {})
         pageid = get_page_id(title)
-        if pageid != 0:
-            # If primary page has been found
-            if pageid not in wiki_dico[theme]:
-                try:
-                    add_entry_to_json(wiki_dico_path, theme=theme, pageid=pageid, title=title)
-                    wiki_dico[theme][theme]=pageid
-                    # print('Title {} added with sucess to the theme {} !'.format(title,theme))
-                except wikipedia.exceptions.DisambiguationError as e:
-                    print('[ERROR] Look like I found many related topic about that... select one and try again please:')
-                    for word in e.options:
-                        print(word)
-                if find_links:
-                    links = get_sorted_linked_page(pageid)
-                    dico_tmp = {key: 0 for key in links if key not in list(wiki_dico[theme])}
-                    for key,value in dico_tmp.items():
-                        if key in list(dico_tmp.keys()):
-                            wiki_dico[theme][key]=dico_tmp[key]
-                        else:
-                            wiki_dico[theme][key]=value
-            else:
-                print(
-                    '[ERROR] Hum, look like I already know this Wikipedia Article ' + title + ' try to learn me something else please ! \n')
-
-        else:
-            suggest = wikipedia.suggest(title)  # else try to reach a suggestion page
-            if suggest is not None:
-                print('[INFO] Title {} of the theme {} had not been found, try to reach: {} !'.format(title, theme, suggest))
-                construct_wiki_dico(wiki_dico_path, [(suggest, theme)])
-            else:
-                print(
-                    '[ERROR] I\'m sorry, but I Cannot find any article or suggestions for %s in the theme, please try again'.format(
-                        title, theme))
-                pass
-
-    wiki_dico = up_wiki_dico(wiki_dico, max_article_links)
-
-    if find_links:
-        for title_, theme_ in title_theme_list:
-            print('\n[INFO] Getting Wikipedia links for {}'.format(theme_))
-            wiki_dico[theme_] = get_global_page_id_wiki_links_list(wiki_dico[theme_])
-
-    if init:
-        with open(wiki_dico_path, 'w') as fp:
-            json.dump(wiki_dico, fp)
-    else:
-        for theme_, dico in wiki_dico.items():
-            for title, pageid in dico.items():
-                add_entry_to_json(wiki_dico_path, theme, pageid=pageid, title=title)
-
-    print('\n[INFO] Construct Knowledge base from Wikipedia DONE.')
+        if not pageid:
+            raise LookupError(f"Missing or ambiguous Wikipedia seed {title!r} for theme {theme!r}")
+        seeds.setdefault(theme, set()).add(title)
+        articles[title] = pageid
+        if find_links:
+            for linked in get_sorted_linked_page(pageid):
+                articles.setdefault(linked, 0)
+    unresolved = {title for articles in knowledge.values() for title, pageid in articles.items() if not pageid}
+    found = get_global_page_id_wiki_links_list(sorted(unresolved)) if unresolved else {}
+    for theme, articles in knowledge.items():
+        resolved = {title: int(pageid or found[title]) for title, pageid in articles.items()}
+        knowledge[theme] = {title: pageid for title, pageid in resolved.items() if pageid > 0}
+    knowledge = up_wiki_dico(knowledge, max_article_links, seed_titles=seeds, previous_seeds=previous_seeds)
+    _write_json(path, knowledge)
 
 
 def clean_wiki_page(content):
-    content = re.sub('=.*=', '', content)  # remove = sign from title
-    content = content.replace(";", '')  # delete all ; sign to be sure to not be confuse when saveing df as csv
-    content = ''.join(content.splitlines())
-    # with open("Output.txt", "w", encoding="utf-8") as text_file:
-    #    text_file.write(content)
-    return content
+    return " ".join(re.sub(r"(?m)^\s*=+[^\n]*?=+\s*$", " ", content).split())
 
 
 def default(o):
-    if isinstance(o, np.int64): return int(o)
-    raise TypeError
+    if isinstance(o, Integral):
+        return int(o)
+    raise TypeError(f"Cannot encode {type(o).__name__} as JSON")
 
 
 def construct_database_from_knwoledge_base(wiki_dico_path, database_file_ouput):
-    df_database = pd.DataFrame(columns=["Content", "Class", "SubClass"])
-    json_file = open(wiki_dico_path)  # load knwoledge base
-    json_str = json_file.read()
-    wiki_dico = json.loads(json_str)
-    for key, value in wiki_dico.items():
-        print('----------------{}----------------'.format(str(key)))
-        for key2, value2 in value.items():
-            print('Getting page \r{}'.format(str(key2)))
-            try:
-                page = clean_wiki_page(wikipedia.page(pageid=value2).content)
-                df_tmp = pd.DataFrame({"Content": page,
-                                       "Class": key,
-                                       "SubClass": key2}, index=[0])
-                df_database = df_database.append(df_tmp, ignore_index=True)
-                df_database.reset_index(inplace=True, drop=True)
-            except:
-                print('[ERROR] PageID do not valid for {0} with pageid: {1} or Disambiguation Error'.format(key2,value2))
-            # add new entry in database
+    """Build the legacy semicolon-separated article CSV and mapping.json."""
+    import pandas as pd
 
-    le = preprocessing.LabelEncoder()
-    le.fit(df_database.Class)
-    le_name_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
-    with open(mapping_file, 'w') as fp:
-        json.dump(le_name_mapping, fp, default=default)
-    print(le_name_mapping)
-    df_database["class_labelized"] = df_database.Class.map(le_name_mapping)
-    df_database.to_csv(database_file_ouput, header=True, index=False, sep=";")
+    # Old dictionaries may contain underscores, redirect aliases or the same ID in
+    # several themes. Canonicalize through MediaWiki before assigning training labels.
+    knowledge = {}
+    canonical_ids = {}
+    pages = {}
+    for theme, articles in _read_json(wiki_dico_path).items():
+        knowledge[theme] = {}
+        for title, pageid in articles.items():
+            key = _article_key(title, pageid)
+            if key not in canonical_ids:
+                try:
+                    page = get_page(pageid=key) if isinstance(key, int) else get_page(title)
+                except LookupError:
+                    canonical_ids[key] = None
+                else:
+                    canonical_ids[key] = page.pageid
+                    pages[page.pageid] = page
+            if canonical_ids[key] is not None:
+                knowledge[theme][title] = canonical_ids[key]
+    records = []
+    for theme, articles in up_wiki_dico(knowledge).items():
+        for title, pageid in articles.items():
+            try:
+                text = clean_wiki_page(pages[pageid].content)
+            except LookupError:
+                continue  # The article may be removed between metadata and text requests.
+            if text:
+                records.append({"Content": text, "Class": theme, "SubClass": title})
+    if not records:
+        raise ValueError("No usable Wikipedia articles were found")
+    frame = pd.DataFrame(records)
+    labels = _read_json(mapping_file) if Path(mapping_file).exists() else {}
+    if not isinstance(labels, dict) or any(type(value) is not int for value in labels.values()):
+        raise ValueError(f"Expected a mapping of names to integer labels in {mapping_file}")
+    if len(set(labels.values())) != len(labels):
+        raise ValueError(f"Found duplicate label IDs in {mapping_file}")
+    next_label = max(labels.values(), default=-1) + 1
+    for name in sorted(set(frame["Class"]) - labels.keys()):
+        labels[name] = next_label
+        next_label += 1
+    frame["class_labelized"] = frame["Class"].map(labels)
+    # Existing IDs retain their meanings across runs. A write failure leaves the old
+    # corpus readable with either the old or the extended label dictionary.
+    with _atomic_output(database_file_ouput) as output:
+        frame.to_csv(output, index=False, sep=";")
+        _write_json(mapping_file, labels)
+
+
+construct_database_from_knowledge_base = construct_database_from_knwoledge_base
 
 
 def label_sentences(df, content_columns="Content", w=None):
-    labeled_sentences = []
-    for index, datapoint in df.iterrows():
-        tokenized_words = re.findall(w, datapoint[content_columns].lower())
-        labeled_sentences.append(LabeledSentence(words=tokenized_words, tags=['SENT_%s' % index]))
-    return labeled_sentences
+    from gensim.models.doc2vec import TaggedDocument
+
+    pattern = w or r"\w+"
+    return [TaggedDocument(re.findall(pattern, text.lower()), [f"SENT_{index}"])
+            for index, text in df[content_columns].items()]
 
 
 def train_doc2vec_model(labeled_sentences):
-    model = Doc2Vec(alpha=0.025, min_alpha=0.025)
-    model.build_vocab(labeled_sentences)
-    for epoch in range(10):
-        model.train(labeled_sentences, epochs=model.epochs, total_examples=model.corpus_count)
-        model.alpha -= 0.002
-        model.min_alpha = model.alpha
-    return model
+    from gensim.models.doc2vec import Doc2Vec
+
+    return Doc2Vec(documents=list(labeled_sentences), vector_size=100, min_count=1,
+                   workers=1, epochs=40, seed=42)
 
 
-def vectorize_comments(df, d2v_model, df_init, action='Train'):
-    comments = []
-    for i in range(0, df.shape[0]):
-        if action == 'Test':
-            index = df_init.shape[0] + i - 1
-        else:
-            index = i
-        label = 'SENT_%s' % index
-        comments.append(d2v_model.docvecs[label])
-    df['vectorized_comments'] = comments
-    return df
+def vectorize_comments(df, d2v_model, df_init, action="Train", *, content_col="Content"):
+    result = df.copy()
+    if action == "Test":
+        result["vectorized_comments"] = [
+            d2v_model.infer_vector(re.findall(r"\w+", text.lower())) for text in df[content_col]
+        ]
+    elif action == "Train":
+        result["vectorized_comments"] = [d2v_model.dv[f"SENT_{index}"] for index in df.index]
+    else:
+        raise ValueError("action must be 'Train' or 'Test'")
+    return result
 
 
 def train_classifier(X, y):
-    n_estimators = [50,100,200]
-    min_samples_split = [2,5,7]
-    min_samples_leaf = [1,2,3]
-    parameters = {'n_estimators': n_estimators, 'min_samples_leaf': min_samples_leaf,
-                  'min_samples_split': min_samples_split}
-    clf = GridSearchCV(RFC(verbose=0, n_jobs=-1), cv=None, param_grid=parameters,verbose=0)
-    clf.fit(X, y)
-    return clf
+    from sklearn.ensemble import RandomForestClassifier
+
+    from sklearn.model_selection import GridSearchCV
+
+    labels = list(y)
+    folds = min(5, min(Counter(labels).values(), default=0))
+    if folds < 2:
+        raise ValueError("Cross-validation needs at least two samples per class")
+    search = GridSearchCV(RandomForestClassifier(random_state=42, n_jobs=1),
+                          {"n_estimators": [50, 100], "min_samples_leaf": [1, 2]}, cv=folds)
+    return search.fit(X, labels)
 
 
 def import_database(database_file, content_col="Content", class_col="class_labelized", sampling=False, split=True):
-    print('[INFO] Import DATABASE...')
-    df = pd.read_csv(database_file, header=0, sep=";", encoding="utf-8")
+    import pandas as pd
+
+    df = pd.read_csv(database_file, sep=";", encoding="utf-8", keep_default_na=False)
+    names = dict(zip(df[class_col], df["Class"])) if "Class" in df else {}
     if split:
         df = split_content(df, content_col, class_col)
     if sampling:
         df = sampling_class(df, class_col)
-    df.reset_index(inplace=True)
-    print('[INFO] Import DATABASE DONE')
+    df = df.reset_index()
+    if names:
+        df.attrs["smarties_label_names"] = names
     return df
+
 
 def sort_keyword_from_database(df, number_of_character_per_word_at_least,
                                number_of_words_at_most_per_phrase,
                                number_of_keywords_appears_in_the_text_at_least,
                                content_col="Content", class_col="class_labelized", stoppath="Stoplist.txt"):
-    print('[INFO] Sort Keyword From Database...')
-    df_k = get_df_keyword_from_content(df, content_col, class_col,
-                                       number_of_character_per_word_at_least,
-                           number_of_words_at_most_per_phrase,
-                           number_of_keywords_appears_in_the_text_at_least)
-    group = df_k.groupby(class_col)['KeyWord']
-    for i,keyword_list in enumerate(group):
-        class_labelized = keyword_list[0]
-        keyword_list = keyword_list[1]
-        print("Group \r{0}/{1}".format(i,group.size()))
-        for index, row in df.iterrows():
-            find = False
-            if row[class_col] == class_labelized:
-                for keyword in keyword_list:
-                    if keyword in row[content_col]:
-                        find = True
-                if not find:
-                    df.drop(index, inplace=True)
-    df.reset_index(inplace=True)
-    print('[INFO] Sort Keyword From Database DONE')
-    return df
+    import pandas as pd
+
+    stop_words = None
+    if stoppath and (stoppath != "Stoplist.txt" or Path(stoppath).exists()):
+        stop_words = rake.load_stop_words(stoppath)
+    keywords = get_df_keyword_from_content(
+        df, content_col, class_col, number_of_character_per_word_at_least,
+        number_of_words_at_most_per_phrase, number_of_keywords_appears_in_the_text_at_least,
+        stop_words=stop_words,
+    )
+    frame = df.reset_index(drop=True)
+    keep = pd.Series(False, index=frame.index)
+    for label, words in keywords.groupby("class_labelized")["KeyWord"]:
+        texts = frame.loc[frame[class_col] == label, content_col]
+        pattern = "|".join(re.escape(word) for word in words)
+        keep.loc[texts.index] = texts.str.contains(pattern, case=False, na=False)
+    return frame.loc[keep].reset_index(drop=True)
+
 
 def model_from_database(df, content_col="Content", class_col="class_labelized"):
-    # Sampling database
-    # lmtzr = WordNetLemmatizer()
-    w = re.compile("\w+", re.I)
-    sen = label_sentences(df, content_columns=content_col, w=w)
-    model = train_doc2vec_model(sen)
-    df = vectorize_comments(df, model, df)
-    X_train, X_test, y_train, y_test = train_test_split(df["vectorized_comments"].T.tolist(),
-                                                        df[class_col], test_size=0.10, random_state=4)
-    classifier = train_classifier(X_train, y_train)
-    # print(classifier.predict(X_test))
-    print(classifier.score(X_test, y_test))
-    return classifier, df
+    """Fit the text pipeline once and preserve the historical (classifier, dataframe) result."""
+    model = TextClassifier().fit(df[content_col].tolist(), df[class_col].tolist())
+    result = df.copy()
+    result.attrs["smarties_label_names"] = _label_names(df, class_col)
+    return model, result
 
 
-def predict(clf, df_init, sentence, content_col='Content'):
-    data = {'Content': [sentence]}
-    df = pd.DataFrame(data)
-    w = re.compile("\w+", re.I)
-    df = df_init.append(df)
-    df.reset_index(drop=True,inplace=True)
-    sen = label_sentences(df, content_columns=content_col, w=w)
-    model = train_doc2vec_model(sen)
-    df = vectorize_comments(df, model, df, action='Train')
-    X_test = df["vectorized_comments"].T.tolist()
-    X = [X_test[-1]]
-    # print(clf.predict(X))
-    print(clf.predict_proba(X))
-    predicted = clf.predict(X)[0]
-    with open(mapping_file) as f_in:
-        dict_mapping = json.load(f_in)
-    for key, value in dict_mapping.items():
-        print('[RESULTS] - Repartition')
-        print("I think to  {0} %  : {1}%".format(key,round(float(clf.predict_proba(X)[0][value]) * 100, 1)))
-
-    print('--------------------------------------------')
-    for key, value in dict_mapping.items():
-        if predicted == value:
-            print("I think to  {} % that it is about: {}".format(round(float(clf.predict_proba(X)[0][value]) * 100, 1),
-                                                                 key))
-            break
+def predict(clf, df_init, sentence, content_col="Content"):
+    """Print per-class probabilities and return the predicted label for a single document."""
+    predicted = clf.predict([sentence])[0]
+    probabilities = clf.predict_proba([sentence])[0]
+    names = df_init.attrs.get("smarties_label_names")
+    if names is None:
+        names = _label_names(df_init, "class_labelized")
+    for label, probability in zip(clf.classes_, probabilities):
+        print(f"{names.get(label, label)}: {probability:.1%}")
+    print(f"Prediction: {names.get(predicted, predicted)}")
+    return predicted

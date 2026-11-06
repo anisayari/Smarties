@@ -1,14 +1,2 @@
-gensim
-imutils
-Markdown
-nltk
-numpy
-pandas
-Pillow
-tensorflow
-tensorflow-gpu
-urllib3
-wikipedia
-scikit-learn
-networkx
-
+# Install the default local project and its runtime dependencies.
+.

@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "Smarties"
+version = "0.12.0"
+description = "Train text classifiers on labeled documents and Wikipedia topics"
+readme = "README.md"
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Anis Ayari", email = "anis.ayari.pro@gmail.com" }]
+dependencies = [
+    "numpy>=1.26.4",
+    "pandas>=2.2.3",
+    "scikit-learn>=1.5",
+    "scipy>=1.11.4",
+]
+
+[project.optional-dependencies]
+legacy = ["gensim>=4.4", "mwviews>=0.2.1", "networkx>=3", "stopwordsiso>=0.7.1"]
+semantic = ["model2vec>=0.6"]
+
+[project.urls]
+Homepage = "https://github.com/anisayari/Smarties"
+Issues = "https://github.com/anisayari/Smarties/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["Smarties"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/Smarties",
+    "/example",
+    "/tests",
+    "/benchmarks",
+    "/requirements.txt",
+]
